@@ -1,0 +1,10 @@
+.img-full {
+  width: 100%;
+  height: auto;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.settings-btn {
+  color: '#1e88e5';
+}
