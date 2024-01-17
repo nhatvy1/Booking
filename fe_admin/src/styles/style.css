@@ -1,3 +1,9 @@
+/* common */
+a {
+  text-decoration: none;
+  color: black;
+}
+
 .img-full {
   width: 100%;
   height: auto;

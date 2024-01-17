@@ -7,7 +7,6 @@ import { HiOutlineMenuAlt3 } from 'react-icons/hi'
 import { memo } from 'react'
 
 const Logo = () => {
-  console.log('Logo')
 
   return (
     <Box sx={{ ...flexJustifyBetween, width: '300px' }}>
