@@ -4,6 +4,8 @@ import { AuthController } from './auth.controller'
 import { UserModule } from '../user/user.module'
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt'
 import { JWT_EXPIRES, JWT_SECRET } from 'src/utils/constant'
+import { AccessTokenStrategy } from 'src/strategies/access-token.strategy'
+import { RefreshTokenStrategy } from 'src/strategies/refresh-token.strategy'
 
 @Module({
   imports: [
@@ -18,6 +20,6 @@ import { JWT_EXPIRES, JWT_SECRET } from 'src/utils/constant'
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
 })
 export class AuthModule {}

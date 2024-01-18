@@ -4,6 +4,7 @@ import { Repository } from 'typeorm'
 import { User } from './user.entity'
 import { CreateUserDto } from './dto/create-user.dto'
 import { Hash } from 'src/utils/hash'
+import { LoginDto } from '../auth/dto/login.dto'
 
 @Injectable()
 export class UserService {
@@ -29,5 +30,13 @@ export class UserService {
     })
     await this.userRepository.save(user)
     return user
+  }
+
+  login(signInDto: LoginDto): Promise<User> {
+    return this.userRepository
+      .createQueryBuilder()
+      .addSelect('password')
+      .where({ email: signInDto.email })
+      .getOne()
   }
 }
