@@ -5,11 +5,14 @@ import { User } from './user.entity'
 import { CreateUserDto } from './dto/create-user.dto'
 import { Hash } from 'src/utils/hash'
 import { LoginDto } from '../auth/dto/login.dto'
+import { RoleService } from '../role/role.service'
+import { role } from 'src/utils/role'
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly roleService: RoleService
   ) {}
 
   checkUser(email: string) {
@@ -23,11 +26,17 @@ export class UserService {
     }
 
     const hashPassword = Hash.generateHash(createUser.password)
-    const user = this.userRepository.create({
-      fullName: createUser.fullName,
+    const findCustomerRole = await this.roleService.getRoleByName(
+      role.CUSTOMER,
+    )
+
+    const dataToCreate = {
+      ...createUser,
       password: hashPassword,
-      email: createUser.email
-    })
+      role: findCustomerRole,
+    };
+
+    const user = this.userRepository.create(dataToCreate)
     await this.userRepository.save(user)
     return user
   }

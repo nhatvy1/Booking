@@ -4,6 +4,8 @@ import typeormConfig from './database/typeorm.config'
 import { ConfigModule } from '@nestjs/config'
 import { UserModule } from './modules/user/user.module'
 import { AuthModule } from './modules/auth/auth.module'
+import { RoleModule } from './modules/role/role.module'
+import { PermissionModule } from './modules/permission/permission.module'
 
 @Module({
   imports: [
@@ -12,7 +14,9 @@ import { AuthModule } from './modules/auth/auth.module'
       useFactory: typeormConfig,
     }),
     UserModule,
-    AuthModule
+    AuthModule,
+    RoleModule,
+    PermissionModule
   ],
   controllers: [],
   providers: [{ provide: 'PORT', useValue: 5000 }],

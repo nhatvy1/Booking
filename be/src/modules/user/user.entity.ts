@@ -1,4 +1,12 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Role } from "../role/role.entity";
+
+
+export enum Status {
+  ACTIVE = 1,
+  INACTIVE = 0,
+  BLOCK = -1,
+}
 
 @Entity()
 export class User {
@@ -23,4 +31,11 @@ export class User {
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
+
+  @Column({ type: Number, default: Status.INACTIVE })
+  status: number
+  
+  @ManyToOne(()=> Role, (role)=> role.id)
+  @JoinColumn({ name: 'role' })
+  role: Role
 }
