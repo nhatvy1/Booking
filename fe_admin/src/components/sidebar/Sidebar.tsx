@@ -21,7 +21,7 @@ const Sidebar = () => {
         </ListSubheader>
           }
         >
-          <Link to='/abc'>
+          <Link to='/admin/quan-ly-tai-khoan'>
             <ListItemButton>
               <ListItemIcon>
                 <CiUser size={30} />
@@ -29,7 +29,7 @@ const Sidebar = () => {
               <ListItemText primary='Quản lý tài khoản' />
             </ListItemButton>
           </Link>
-          <Link to='/abc'>
+          <Link to='/admin/quan-ly-team'>
             <ListItemButton>
               <ListItemIcon>
                 <MdOutlineSecurity size={30} />

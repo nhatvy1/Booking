@@ -1,18 +1,9 @@
-import Content from './components/Content/Content'
-import Header from './components/header/Header'
-import Sidebar from './components/sidebar/Sidebar'
-import Box from '@mui/material/Box'
+import useRouteElements from './router/useRouteElement'
 
 function App() {
-  return (
-    <>
-      <Header />
-      <Box sx={{ display: 'flex' }}>
-        <Sidebar />
-        <Content />
-      </Box>
-    </>
-  )
+  const routeElements = useRouteElements()
+
+  return <>{routeElements}</>
 }
 
 export default App
