@@ -57,4 +57,14 @@ export class PermissionService {
       throw error
     }
   }
+
+  async getPermissionByName(subject: string) {
+    try {
+      const permissions = await this.permissionRepository.findBy({ subject })
+
+      return permissions
+    } catch (e) {
+      throw e
+    }
+  }
 }

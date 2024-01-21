@@ -17,7 +17,7 @@ const Logo = () => {
             component='span'
             fontSize={24}
             fontWeight={700}
-            color='secondary'
+            color='#ff385c'
           >
             Airbnb
           </Typography>

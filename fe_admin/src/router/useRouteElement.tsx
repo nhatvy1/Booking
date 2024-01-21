@@ -1,8 +1,27 @@
-import { useRoutes } from 'react-router-dom'
+import { Navigate, useRoutes } from 'react-router-dom'
 import HomeAdmin from '../pages/admin/HomeAdmin'
 import { links } from './links'
+import Login from '../pages/login/Login'
 
 const useRouteElements = () => {
+  function ProtectedHomePage() {
+    const token = 'abcxcksdfds'
+
+    if(token) {
+      return <Navigate to='/admin' />
+    }
+    return <Navigate to='/login' />
+  }
+
+  function ProtectedRoute() {
+    const token = 'abcxcksdfds'
+    if (!token) {
+      return <Navigate to='/login' />
+    }
+
+    return <HomeAdmin />
+  }
+ 
   function getRoutes(links: any) {
     const routes: any = []
 
@@ -23,8 +42,12 @@ const useRouteElements = () => {
 
   const routeElements = useRoutes([
     {
+      path: '/',
+      element: ProtectedHomePage()
+    },
+    {
       path: '/admin',
-      element: <HomeAdmin />,
+      element: ProtectedRoute(),
       children: getRoutes(links).map((route: any) => ({
         ...route,
         element: route.element,
@@ -32,7 +55,7 @@ const useRouteElements = () => {
     },
     {
       path: '/login',
-      element: <h1>Login</h1>,
+      element: <Login />,
     },
     {
       path: 'register',
