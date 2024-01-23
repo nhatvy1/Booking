@@ -8,8 +8,19 @@ import { CiLock } from 'react-icons/ci'
 import { Checkbox, FormControlLabel, Link } from '@mui/material'
 import ButtonCustom from '../../components/common/Button'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { useAppDispatch } from '../../hooks/useAppDispatch'
+import { login } from '../../store/slices/auth.slice'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../store/store'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
+  const { isLoggedIn } = useSelector((state: RootState) => state.auth.auth)
+
   const {
     register,
     handleSubmit,
@@ -17,9 +28,12 @@ const Login = () => {
   } = useForm<ILogin>()
 
   const onSubmit: SubmitHandler<ILogin> = (values) => {
-    console.log('Check values: ', values)
+    dispatch(login(values))
   }
 
+  useEffect(()=> {
+    isLoggedIn && navigate('/admin')
+  }, [isLoggedIn])
   return (
     <Container component='main' maxWidth='xs'>
       <Box
@@ -72,7 +86,7 @@ const Login = () => {
                 },
               },
             })}
-            helperText={<Typography component='p' color='secondary'>{errors.email?.message}</Typography>}
+            helperText={<Typography component='span' color='secondary'>{errors.email?.message}</Typography>}
           />
           <TextField
             margin='normal'
@@ -86,7 +100,7 @@ const Login = () => {
                 message: 'Vui lòng nhập mật khẩu',
               },
             })}
-            helperText={<Typography component='p' color='secondary'>{errors.password?.message}</Typography>}
+            helperText={<Typography component='span' color='secondary'>{errors.password?.message}</Typography>}
           />
           <FormControlLabel
             control={<Checkbox value='remember' color='primary' />}

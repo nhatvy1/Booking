@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Post, Res } from "@nestjs/common";
+import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Put, Res } from "@nestjs/common";
 import { RoleService } from "./role.service";
 import { Response } from "src/utils/response.type";
 import { CreateRoleDto } from "./dto/create.role.dto";
@@ -27,6 +27,34 @@ export class RoleController {
       const result = await this.roleService.createRole(body)
       return Response({
         message: 'Success',
+        statusCode: HttpStatus.OK,
+        result
+      })
+    } catch(e) {
+      throw e
+    }
+  }
+
+  @Get()
+  async getRoleBySlug(@Param('slug') slug: string) {
+    try {
+      const result = await this.roleService.getRoleByName(slug)
+      return Response({
+        message: 'Success',
+        statusCode: HttpStatus.OK,
+        result
+      })
+    } catch(e) {
+      throw e
+    }
+  }
+
+  @Put(':id')
+  async updateRole(@Param('id', ParseIntPipe) id: number) {
+    try {
+      const result = await this.roleService.getRoleById(id)
+      return Response({ 
+        message: 'Sucess',
         statusCode: HttpStatus.OK,
         result
       })

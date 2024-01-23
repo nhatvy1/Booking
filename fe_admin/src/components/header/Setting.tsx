@@ -3,12 +3,22 @@ import { flexCenter, flexJustifyBetween } from '../../theme/common.style'
 import { CiSettings } from 'react-icons/ci'
 import { BsArrowsFullscreen } from 'react-icons/bs'
 import Avatar from '@mui/material/Avatar'
-import { memo } from 'react'
+import { MouseEvent, memo, useState } from 'react'
+import AccountSetting from './AccountSetting'
 
-const Setting = ()=> {
+const Setting = () => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
 
   return (
-    <Box sx={{ ...flexCenter }}>
+    <>
+      <Box sx={{ ...flexCenter }} onClick={handleClick}>
         <Box
           sx={{
             ...flexCenter,
@@ -40,7 +50,9 @@ const Setting = ()=> {
           <CiSettings size={30} className='settings-btn' />
         </Box>
       </Box>
+      <AccountSetting anchorEl={anchorEl} handleClose={handleClose} open={open} />
+    </>
   )
 }
 
-export default memo(Setting) 
+export default memo(Setting)

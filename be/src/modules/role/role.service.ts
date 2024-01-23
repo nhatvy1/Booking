@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Role } from './role.entity'
@@ -22,16 +22,10 @@ export class RoleService {
       })
       await this.roleRepository.save(admin)
       const customer = this.roleRepository.create({
-        name: 'NGười dùng',
+        name: 'Người dùng',
         slug: role.CUSTOMER,
       })
       await this.roleRepository.save(customer)
-
-      await this.permissionService.addPermission({
-        subject: 'all',
-        action: actionEnum.MANAGE,
-        role: admin,
-      })
 
       return { mesage: 'Success' }
     } catch (e) {
@@ -41,28 +35,40 @@ export class RoleService {
 
   async getRoleByName(slug: string) {
     try {
-      const role = await this.roleRepository.findOneBy({ slug })
+      const role = await this.roleRepository.findOne({
+        where: { slug: slug },
+      })
       return role
     } catch (e) {
       throw e
     }
   }
 
-  async createRole({ name, slug, permissions }: CreateRoleDto) {
+  async getRoleById(id: number) {
     try {
-      console.log('Check permssions: ', permissions)
+      const role = await this.roleRepository.findOneBy({ id })
+      return role
+    } catch (e) {
+      throw e
+    }
+  }
+
+  async createRole({ name, slug }: CreateRoleDto) {
+    try {
       const result = this.roleRepository.create({ name, slug })
       const role = await this.roleRepository.save(result)
 
-      for (const key of Object.keys(permissions)) {
-        permissions[key].forEach(async (action: actionEnum) => {
-          this.permissionService.addPermission({ action, subject: key, role });
-        });
-      }
+      return role
+    } catch (e) {
+      throw e
+    }
+  }
 
-      return 1
-    } catch(e) {
-      throw e 
+  async updateRole(id: number) {
+    try {
+      
+    } catch (e) {
+      throw e
     }
   }
 }

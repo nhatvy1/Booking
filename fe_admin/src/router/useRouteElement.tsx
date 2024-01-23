@@ -2,10 +2,12 @@ import { Navigate, useRoutes } from 'react-router-dom'
 import HomeAdmin from '../pages/admin/HomeAdmin'
 import { links } from './links'
 import Login from '../pages/login/Login'
+import { useSelector } from 'react-redux'
+import { RootState } from '../store/store'
 
 const useRouteElements = () => {
   function ProtectedHomePage() {
-    const token = 'abcxcksdfds'
+    const { token } = useSelector((state: RootState)=> state.auth.auth)
 
     if(token) {
       return <Navigate to='/admin' />
@@ -14,7 +16,8 @@ const useRouteElements = () => {
   }
 
   function ProtectedRoute() {
-    const token = 'abcxcksdfds'
+    const { token } = useSelector((state: RootState)=> state.auth.auth)
+
     if (!token) {
       return <Navigate to='/login' />
     }

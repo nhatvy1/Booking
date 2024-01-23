@@ -9,6 +9,8 @@ import { store } from './store/store.ts'
 import { BrowserRouter } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import persistStore from 'redux-persist/es/persistStore'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 let persistor = persistStore(store)
 
@@ -20,6 +22,12 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <MuiProvider>
             <CssBaseline />
             <App />
+            <ToastContainer
+              position='top-right'
+              pauseOnFocusLoss
+              pauseOnHover
+              theme='light'
+            />
           </MuiProvider>
         </BrowserRouter>
       </PersistGate>
