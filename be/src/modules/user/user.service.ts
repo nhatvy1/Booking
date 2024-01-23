@@ -48,4 +48,13 @@ export class UserService {
       .where({ email: signInDto.email })
       .getOne()
   }
+
+  async getListUsers() {
+    try {
+      const response = await this.userRepository.find()
+      return response
+    } catch(e) {
+      throw e
+    }
+  }
 }
