@@ -9,7 +9,7 @@ const HomeAdmin = () => {
       <Header />
       <Box sx={{ display: 'flex' }}>
         <Sidebar />
-        <Box sx={{ background: '#eef2f6', borderRadius: '5px', flex: '1 1 0%', padding: '10px' }}>
+        <Box sx={{ borderRadius: '5px', flex: '1 1 0%', padding: '10px' }}>
           <Outlet />
         </Box>
       </Box>

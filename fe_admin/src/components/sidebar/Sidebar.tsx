@@ -10,7 +10,7 @@ import ListSubheader from '@mui/material/ListSubheader'
 
 const Sidebar = () => {
   return (
-      <Box sx={{ height: 'calc(100vh - 80px)', width: '300px' }}>
+      <Box sx={{ height: 'calc(100vh - 80px)', width: '300px', borderRight: '1px solid lightgray' }}>
         <List
           sx={{ width: '100%' }}
           component='nav'

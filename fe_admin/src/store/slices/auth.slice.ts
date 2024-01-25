@@ -19,7 +19,6 @@ export const login = createAsyncThunk(
   async (login: ILogin, { rejectWithValue }) => {
     try {
       const response = await instanceNonAuth.post('/auth/login', login)
-      console.log(response)
       return response
     } catch (e) {
       console.log(e)

@@ -1,6 +1,6 @@
 import { RiGroupLine } from "react-icons/ri";
-import Content from "../components/Content/Content";
 import { IoHomeOutline } from "react-icons/io5";
+import ManageUser from "../pages/admin/manage-user/ManageUser";
 
 export const links = [
   {
@@ -13,7 +13,7 @@ export const links = [
     name: 'Quản lý tài khoản',
     href: '/admin/quan-ly-tai-khoan',
     icon: <RiGroupLine />,
-    element: <Content />
+    element: <ManageUser />
   },
   {
     name: 'Quản lý tài khoản',

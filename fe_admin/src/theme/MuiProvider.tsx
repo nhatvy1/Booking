@@ -28,9 +28,9 @@ const theme = createTheme({
     fontWeightMedium: 500,
   },
   palette: {
-    primary: {
-      main: grey[700],
-    },
+    // primary: {
+    //   main: grey[700],
+    // },
     secondary: {
       main: '#ff385c',
     },
