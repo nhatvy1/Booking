@@ -43,9 +43,9 @@ export class UserService {
 
   login(signInDto: LoginDto): Promise<User> {
     return this.userRepository
-      .createQueryBuilder()
-      .addSelect('password')
+      .createQueryBuilder('user')
       .where({ email: signInDto.email })
+      .addSelect('user.password')
       .getOne()
   }
 
