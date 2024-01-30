@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus } from '@nestjs/common'
+import { Controller, Get, HttpStatus, Post } from '@nestjs/common'
 import { PermissionService } from './permission.service'
 import { Response } from 'src/utils/response.type'
 
@@ -14,5 +14,14 @@ export class PermissionController {
       message: 'Success',
       result
     })
+  }
+
+  @Post()
+  createPermission() {
+    try {
+      return { msg: 'create permission' }
+    } catch(e) {
+      throw e
+    }
   }
 }

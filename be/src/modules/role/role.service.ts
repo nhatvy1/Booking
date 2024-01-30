@@ -37,6 +37,7 @@ export class RoleService {
     try {
       const role = await this.roleRepository.findOne({
         where: { slug: slug },
+        relations: {  permission: true }
       })
       return role
     } catch (e) {
@@ -66,7 +67,7 @@ export class RoleService {
 
   async updateRole(id: number) {
     try {
-      
+      return { msg: 'update role' }
     } catch (e) {
       throw e
     }
