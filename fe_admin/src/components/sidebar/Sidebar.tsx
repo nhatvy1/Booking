@@ -29,7 +29,7 @@ const Sidebar = () => {
               <ListItemText primary='Quản lý tài khoản' />
             </ListItemButton>
           </Link>
-          <Link to='/admin/quan-ly-team'>
+          <Link to='/admin/quan-ly-phan-quyen'>
             <ListItemButton>
               <ListItemIcon>
                 <MdOutlineSecurity size={30} />

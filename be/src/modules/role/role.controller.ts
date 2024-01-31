@@ -21,6 +21,20 @@ export class RoleController {
     }
   }
 
+  @Get()
+  async getAllRole() {
+    try {
+      const result = await this.roleService.getAllRole()
+      return Response({
+        message: 'success',
+        statusCode: HttpStatus.OK,
+        result
+      })
+    } catch(e) {
+      throw e
+    }
+  }
+
   @Post()
   async createRole(@Body() body: CreateRoleDto) {
     try {

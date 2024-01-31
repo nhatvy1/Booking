@@ -11,6 +11,7 @@ import {
   REGISTER,
 } from 'redux-persist'
 import userReducer from './slices/user.slice'
+import roleReducer from './slices/role.slice'
 
 const authConfig = {
   key: 'auth',
@@ -27,7 +28,8 @@ const persistedReducer = persistReducer(authConfig, rootReducer)
 export const store = configureStore({
   reducer: {
     auth: persistedReducer,
-    user: userReducer
+    user: userReducer,
+    role: roleReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

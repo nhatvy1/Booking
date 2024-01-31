@@ -33,6 +33,15 @@ export class RoleService {
     }
   }
 
+  async getAllRole() {
+    try {
+      const allRole = await this.roleRepository.find()
+      return allRole       
+    } catch(e) {
+      throw e
+    }
+  }
+
   async getRoleByName(slug: string) {
     try {
       const role = await this.roleRepository.findOne({
