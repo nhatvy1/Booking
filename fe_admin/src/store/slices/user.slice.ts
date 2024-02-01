@@ -15,8 +15,7 @@ export const getListUser = createAsyncThunk(
   'user/getListUser',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await instanceAuth.get('/user')
-      console.log('Check response: ', response)
+      const response: IResponseListUser = await instanceAuth.get('/user')
       return response
     } catch (e) {
       console.log(e)
@@ -34,7 +33,7 @@ const userSlice = createSlice({
       .addCase(getListUser.pending, (state) => {
         state.loading = true
       })
-      .addCase(getListUser.fulfilled, (state, action: PayloadAction<any>) => {
+      .addCase(getListUser.fulfilled, (state, action: PayloadAction<IResponseListUser>) => {
         return { ...state, listUsers: action.payload.result }
       })
       .addCase(getListUser.rejected, (state) => {

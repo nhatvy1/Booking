@@ -10,7 +10,9 @@ const Header = () => {
       sx={{
         ...flexJustifyBetween,
         borderBottom: '1px solid lightgray',
-        height: '80px'
+        height: '80px',
+        background: 'white',
+        zIndex: 20
       }}
       position='sticky'
       top={0}

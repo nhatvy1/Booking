@@ -5,3 +5,9 @@ interface IUser {
   status: number,
   createdAt: Date
 }
+
+interface IResponseListUser {
+  message: string | null | ''
+  statusCode: number | null
+  result: IUser[] | []
+}

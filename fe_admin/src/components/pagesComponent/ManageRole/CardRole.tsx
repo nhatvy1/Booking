@@ -6,6 +6,8 @@ import Tooltip from '@mui/material/Tooltip'
 import { flexBetweenCenter } from '../../../theme/common.style'
 import { CiEdit } from 'react-icons/ci'
 import { MdOutlineDeleteOutline } from 'react-icons/md'
+import { useDispatch } from 'react-redux'
+import { selectRole } from '../../../store/slices/role.slice'
 
 const stylesCardRole = {
   width: '300px',
@@ -15,12 +17,18 @@ const stylesCardRole = {
 }
 
 interface Props {
-  item: any
+  item: IRole
 }
 
 const CardRole = ({ item }: Props) => {
+  const dispatch = useDispatch()
+
   return (
-    <Card variant='outlined' sx={{ ...stylesCardRole, ...flexBetweenCenter }}>
+    <Card 
+      variant='outlined' 
+      sx={{ ...stylesCardRole, ...flexBetweenCenter }} 
+      onClick={()=> dispatch(selectRole(item))}
+    >
       <Box>
         <Typography variant='h5'>{item.slug}</Typography>
         <Typography component='p'>{item.name}</Typography>

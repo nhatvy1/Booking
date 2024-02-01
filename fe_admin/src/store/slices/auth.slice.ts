@@ -21,7 +21,6 @@ export const login = createAsyncThunk(
       const response = await instanceNonAuth.post('/auth/login', login)
       return response
     } catch (e) {
-      console.log(e)
       return rejectWithValue(e)
     }
   },
@@ -31,7 +30,6 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout(state): AuthSliceState {
-      console.log('log out')
       return { ...state, token: null, isLoggedIn: false, loginStatus: '' }
     },
   },

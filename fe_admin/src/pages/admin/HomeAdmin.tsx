@@ -7,7 +7,7 @@ const HomeAdmin = () => {
   return (
     <>
       <Header />
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', zIndex: 10 }}>
         <Sidebar />
         <Box sx={{ borderRadius: '5px', flex: '1 1 0%', padding: '10px' }}>
           <Outlet />
