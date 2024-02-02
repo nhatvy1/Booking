@@ -10,6 +10,7 @@ import DataTable from '../../common/DataTable'
 import { GridColDef } from '@mui/x-data-grid'
 import { Checkbox } from '@mui/material'
 import { pink } from '@mui/material/colors'
+import ButtonCustom from '../../common/Button'
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -23,7 +24,7 @@ const style = {
   boxShadow: 24,
   p: 2,
   borderRadius: 2,
-  zIndex: 1,
+  zIndex: 30,
 }
 
 const columns: GridColDef[] = [
@@ -162,8 +163,13 @@ const EditRole = () => {
             </Typography>
           </Box>
           {/* Phân quyền theo chức năng */}
-          <Box>
+          <Box
+            component='form'
+          >
             <DataTable columns={columns} rows={rows} />
+            <Box sx={{ width: '200px', margin: '10px auto 0' }}>
+              <ButtonCustom text='Cập nhật' />
+            </Box>
           </Box>
         </Box>
       </Fade>

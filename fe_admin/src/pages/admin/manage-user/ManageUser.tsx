@@ -6,12 +6,14 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/store'
 import { useEffect } from 'react'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { getListUser } from '../../../store/slices/user.slice'
+import { getListUser, selectUser } from '../../../store/slices/user.slice'
 import DataTable from '../../../components/common/DataTable'
 import { GridColDef } from '@mui/x-data-grid'
 import { flexCenter } from '../../../theme/common.style'
 import { CiEdit } from 'react-icons/ci'
 import { MdOutlineDelete } from 'react-icons/md'
+import AccountStatus from '../../../components/common/AccountStatus'
+import EditUser from '../../../components/pagesComponent/ManageUser/EditUser'
 
 const ManageUser = () => {
   const dispatch = useAppDispatch()
@@ -21,7 +23,14 @@ const ManageUser = () => {
     { field: 'id', headerName: 'ID', width: 70 },
     { field: 'email', headerName: 'Email', width: 250 },
     { field: 'fullName', headerName: 'Họ và tên', width: 250 },
-    { field: 'status', headerName: 'Trạng thái', width: 250 },
+    {
+      field: 'status',
+      headerName: 'Trạng thái',
+      width: 250,
+      renderCell(params) {
+        return <AccountStatus status={params.row.status} />
+      },
+    },
     { field: 'createdAt', headerName: 'Ngày tạo', width: 250 },
     {
       field: 'action',
@@ -32,7 +41,7 @@ const ManageUser = () => {
         return (
           <Box sx={flexCenter}>
             <Tooltip title='Cập nhật' placement='top'>
-              <Button size='large' onClick={()=> console.log(params.row)}>
+              <Button size='large' onClick={() => dispatch(selectUser(params.row))}>
                 <CiEdit size={24} />
               </Button>
             </Tooltip>
@@ -57,6 +66,7 @@ const ManageUser = () => {
         Quản lý tài khoản
       </Typography>
       <DataTable columns={columns} rows={listUsers} />
+      <EditUser />
     </Box>
   )
 }

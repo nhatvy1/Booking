@@ -12,7 +12,7 @@ const Header = () => {
         borderBottom: '1px solid lightgray',
         height: '80px',
         background: 'white',
-        zIndex: 20
+        zIndex: 2
       }}
       position='sticky'
       top={0}

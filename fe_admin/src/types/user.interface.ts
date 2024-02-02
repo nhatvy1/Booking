@@ -1,9 +1,9 @@
 interface IUser {
-  id: number,
+  id: number | null,
   email: string,
   fullName: string,
-  status: number,
-  createdAt: Date
+  status: number | null,
+  createdAt: Date | null
 }
 
 interface IResponseListUser {

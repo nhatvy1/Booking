@@ -2,13 +2,14 @@ import { RiGroupLine } from "react-icons/ri";
 import { IoHomeOutline } from "react-icons/io5";
 import ManageUser from "../pages/admin/manage-user/ManageUser";
 import ManageRole from "../pages/admin/manage-role/ManageRole";
+import HomeIntroduce from "../components/pagesComponent/Introduce/HomeIntroduce";
 
 export const links = [
   {
     name: 'Dashboard',
     href: '/admin',
     icon: <IoHomeOutline />,
-    element: <h1>Trang chu admin</h1>
+    element: <HomeIntroduce />
   },
   {
     name: 'Quản lý tài khoản',
