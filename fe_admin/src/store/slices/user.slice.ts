@@ -1,10 +1,12 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import instanceAuth from '../../axios/axios.auth'
+import { toast } from 'react-toastify'
 
 interface UserSlice {
   loading: boolean
   listUsers: IUser[] | []
   editUserModal: boolean
+  deleteUserModal: boolean
   currentUser: IUser
 }
 
@@ -12,6 +14,7 @@ const initialState: UserSlice = {
   loading: false,
   listUsers: [],
   editUserModal: false,
+  deleteUserModal: false,
   currentUser: {
     id: null,
     email: '',
@@ -34,11 +37,24 @@ export const getListUser = createAsyncThunk(
   },
 )
 
+export const deleteUserById = createAsyncThunk(
+  'user/deleteUserById',
+  async (id: number | null, { rejectWithValue }) => {
+    try {
+      const response: any = await instanceAuth.delete(`/user/${id}`)
+      return response
+    } catch (e) {
+      console.log(e)
+      return rejectWithValue(e)
+    }
+  },
+)
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    selectUser(state, payload) {
+    selectEditUser(state, payload) {
       state.editUserModal = true
       state.currentUser = payload.payload
     },
@@ -52,9 +68,24 @@ const userSlice = createSlice({
         createdAt: null,
       }
     },
+    openDeleteUserById(state, payload) {
+      state.deleteUserModal = true
+      state.currentUser = payload.payload
+    },
+    closeDeleteUserById(state) {
+      state.deleteUserModal = false
+      state.currentUser = {
+        id: null,
+        email: '',
+        fullName: '',
+        status: null,
+        createdAt: null,
+      }
+    },
   },
   extraReducers(builder) {
     builder
+      // get all user
       .addCase(getListUser.pending, (state) => {
         state.loading = true
       })
@@ -67,9 +98,35 @@ const userSlice = createSlice({
       .addCase(getListUser.rejected, (state) => {
         return { ...state, listUsers: [], loading: false }
       })
+
+      // delete
+      .addCase(deleteUserById.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(
+        deleteUserById.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          toast.success(action?.payload?.message || 'Xóa thành công')
+          return {
+            ...state,
+            deleteUserModal: false,
+            listUsers: state.listUsers.filter(
+              (user) => user.id !== action.payload.result.id,
+            ),
+          }
+        },
+      )
+      .addCase(deleteUserById.rejected, (state) => {
+        return { ...state, loading: false }
+      })
   },
 })
 
-export const { selectUser, closeEditUserModal } = userSlice.actions
+export const {
+  selectEditUser,
+  closeEditUserModal,
+  openDeleteUserById,
+  closeDeleteUserById,
+} = userSlice.actions
 const userReducer = userSlice.reducer
 export default userReducer

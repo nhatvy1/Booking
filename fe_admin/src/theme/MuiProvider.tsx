@@ -22,7 +22,7 @@ declare module '@mui/material/styles' {
 const theme = createTheme({
   typography: {
     fontFamily: `"Roboto", "Helvetica", "Arial", sans-serif`,
-    fontSize: 14,
+    fontSize: 16,
     fontWeightLight: 300,
     fontWeightRegular: 400,
     fontWeightMedium: 500,
@@ -46,7 +46,7 @@ const theme = createTheme({
           px: 1,
         },
         variant: 'subtitle2',
-        textTransform: 'capitalize',
+        // textTransform: 'capitalize',
       },
     },
     MuiStack: {

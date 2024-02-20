@@ -6,6 +6,7 @@ interface RoleSlice {
   listRoles: IRole[] | []
   roleCurrent: IRole
   editRoleModal: boolean
+  openAddRoleModal: boolean
 }
 
 const initialState: RoleSlice = {
@@ -13,6 +14,7 @@ const initialState: RoleSlice = {
   roleCurrent: { id: null, name: '', slug: '' },
   loading: false,
   listRoles: [],
+  openAddRoleModal: false
 }
 
 export const getAllRole = createAsyncThunk(
@@ -27,10 +29,29 @@ export const getAllRole = createAsyncThunk(
   },
 )
 
+export const createRole = createAsyncThunk(
+  'role/createRole',
+  async(payloadRole: IPayloadRole, { rejectWithValue })=> {
+    try {
+      const response = await instanceAuth.post('/role', payloadRole)
+      console.log('Check response: ', response)
+      return response
+    } catch(e) {
+      return rejectWithValue(e)
+    }
+  }
+)
+
 const roleSlice = createSlice({
   name: 'role',
   initialState,
   reducers: {
+    openAddRoleModal(state) {
+      state.openAddRoleModal = true
+    },
+    closeAddRoleModal(state) {
+      state.openAddRoleModal = false
+    },
     selectRole(state, payload) {
       state.roleCurrent = payload.payload
       state.editRoleModal = true
@@ -54,9 +75,19 @@ const roleSlice = createSlice({
       .addCase(getAllRole.rejected, (state) => {
         return { ...state, listRoles: [], loading: false }
       })
+      .addCase(createRole.pending, (state)=> {
+        state.loading = true
+      })
+      .addCase(createRole.fulfilled, (state, action: any)=> {
+        state.loading = false
+        console.log('Check action: ', action)
+      })
+      .addCase(createRole.rejected, (state)=> {
+        state.loading = false
+      })
   },
 })
 
-export const { selectRole, closeEditRoleModal } = roleSlice.actions
+export const { selectRole, closeEditRoleModal, openAddRoleModal, closeAddRoleModal } = roleSlice.actions
 const roleReducer = roleSlice.reducer
 export default roleReducer

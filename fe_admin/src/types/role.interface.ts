@@ -9,3 +9,8 @@ interface IResponseRole {
   statusCode: number | null
   result: IRole[] | []
 }
+
+interface IPayloadRole {
+  name: string | null
+  slug: string | null
+}

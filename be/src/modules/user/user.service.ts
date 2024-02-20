@@ -51,8 +51,24 @@ export class UserService {
 
   async getListUsers() {
     try {
-      const response = await this.userRepository.find()
+      const response = await this.userRepository.find({
+        order: {
+          createdAt: 'DESC'
+        }
+      })
       return response
+    } catch(e) {
+      throw e
+    }
+  }
+
+  async deleteUserById(id: number) {
+    try {
+      const user = await this.userRepository.findOneBy({ id })
+      if(user) {
+        await this.userRepository.remove(user)
+      }
+      return user
     } catch(e) {
       throw e
     }

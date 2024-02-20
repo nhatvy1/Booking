@@ -1,18 +1,16 @@
+import Box from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import TextField from '@mui/material/TextField'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import InputLabel from '@mui/material/InputLabel'
+import FormHelperText from '@mui/material/FormHelperText'
 import ModalCustom from '../../common/ModalCustome'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/store'
 import { closeEditUserModal } from '../../../store/slices/user.slice'
-import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import {
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from '@mui/material'
 import ButtonCustom from '../../common/Button'
 
 const EditUser = () => {
@@ -43,13 +41,7 @@ const EditUser = () => {
         sx={{ width: '360px' }}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <TextField
-          margin='normal'
-          required
-          fullWidth
-          label='Email'
-          disabled
-        />
+        <TextField margin='normal' required fullWidth label='Email' disabled />
         <TextField
           margin='normal'
           required

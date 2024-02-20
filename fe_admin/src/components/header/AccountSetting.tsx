@@ -51,7 +51,7 @@ const AccountSetting = ({ anchorEl, handleClose, open }: Props)=> {
           <ListItemIcon>
             <IoIosLogOut />
           </ListItemIcon>
-          Logout
+          Đăng xuất
         </MenuItem>
       </Menu>
   )
