@@ -6,6 +6,8 @@ import { LoginDto } from './dto/login.dto'
 import { JwtAuthGuard } from 'src/guards/jwt.auth.guard'
 import { GetCurrentUser } from 'src/decorator/auth.user.decorator'
 import { JwtPayload } from './interfaces/jwt.payload.interface'
+import { JwtRefreshGuard } from 'src/guards/jwt-auth-refresh.guard'
+import { TokenVerify } from './interfaces/token.interface'
 
 @Controller('auth')
 export class AuthController {
@@ -26,7 +28,12 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('demo')
   async demo(@GetCurrentUser() user: JwtPayload) {
-    console.log('Check user: ', user.userId)
-    return { msg: 'dsad' }
+    return { msg: 'Test refresh token' }
+  }
+
+  @UseGuards(JwtRefreshGuard)
+  @Get('/refresh-token')
+  refreshToken(@GetCurrentUser('refreshToken') tokenVerify: TokenVerify) {
+    return this.authService.refreshToken(tokenVerify)
   }
 }

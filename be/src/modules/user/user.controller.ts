@@ -1,8 +1,10 @@
-import { Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, } from '@nestjs/common';
+import { Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, UseGuards, } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Response } from 'src/utils/response.type';
+import { JwtAuthGuard } from 'src/guards/jwt.auth.guard';
 
 @Controller('user')
+@UseGuards(JwtAuthGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

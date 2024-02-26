@@ -12,7 +12,7 @@ import { role } from 'src/utils/role'
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-    private readonly roleService: RoleService
+    private readonly roleService: RoleService,
   ) {}
 
   checkUser(email: string) {
@@ -21,20 +21,18 @@ export class UserService {
 
   async createUser(createUser: CreateUserDto) {
     const foundUser = await this.checkUser(createUser.email)
-    if(foundUser) {
+    if (foundUser) {
       throw new ConflictException('Email đã được đăng ký')
     }
 
     const hashPassword = Hash.generateHash(createUser.password)
-    const findCustomerRole = await this.roleService.getRoleByName(
-      role.CUSTOMER,
-    )
+    const findCustomerRole = await this.roleService.getRoleByName(role.CUSTOMER)
 
     const dataToCreate = {
       ...createUser,
       password: hashPassword,
       role: findCustomerRole,
-    };
+    }
 
     const user = this.userRepository.create(dataToCreate)
     await this.userRepository.save(user)
@@ -44,8 +42,10 @@ export class UserService {
   login(signInDto: LoginDto): Promise<User> {
     return this.userRepository
       .createQueryBuilder('user')
+      .leftJoinAndSelect('user.role', 'role')
+      .select(['user', 'role.slug'])
       .where({ email: signInDto.email })
-      .addSelect('user.password')
+      .addSelect(['user.password'])
       .getOne()
   }
 
@@ -53,11 +53,11 @@ export class UserService {
     try {
       const response = await this.userRepository.find({
         order: {
-          createdAt: 'DESC'
-        }
+          createdAt: 'DESC',
+        },
       })
       return response
-    } catch(e) {
+    } catch (e) {
       throw e
     }
   }
@@ -65,11 +65,11 @@ export class UserService {
   async deleteUserById(id: number) {
     try {
       const user = await this.userRepository.findOneBy({ id })
-      if(user) {
+      if (user) {
         await this.userRepository.remove(user)
       }
       return user
-    } catch(e) {
+    } catch (e) {
       throw e
     }
   }

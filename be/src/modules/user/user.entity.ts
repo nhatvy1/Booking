@@ -1,7 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "../role/role.entity";
 
-
 export enum Status {
   ACTIVE = 1,
   INACTIVE = 0,

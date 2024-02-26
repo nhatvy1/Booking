@@ -67,4 +67,8 @@ export class PermissionService {
       throw e
     }
   }
+
+  async createPermission() {
+    
+  }
 }
