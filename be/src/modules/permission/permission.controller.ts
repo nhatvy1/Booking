@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, HttpStatus, Post, Put, UseGuards } from '@nestjs/common'
 import { PermissionService } from './permission.service'
 import { Response } from 'src/utils/response.type'
 import { JwtAuthGuard } from 'src/guards/jwt.auth.guard'
@@ -16,14 +16,5 @@ export class PermissionController {
       message: 'Success',
       result
     })
-  }
-
-  @Post()
-  createPermission() {
-    try {
-      return { msg: 'create permission' }
-    } catch(e) {
-      throw e
-    }
   }
 }

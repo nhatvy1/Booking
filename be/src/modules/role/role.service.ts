@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Role } from './role.entity'
@@ -6,6 +10,8 @@ import { role } from 'src/utils/role'
 import { PermissionService } from '../permission/permission.service'
 import { actionEnum } from '../permission/permission.entity'
 import { CreateRoleDto } from './dto/create.role.dto'
+import { throwError } from 'rxjs'
+import { UpdateRoleDto } from './dto/update.role.dto'
 
 @Injectable()
 export class RoleService {
@@ -35,9 +41,11 @@ export class RoleService {
 
   async getAllRole() {
     try {
-      const allRole = await this.roleRepository.find()
-      return allRole       
-    } catch(e) {
+      const allRole = await this.roleRepository.find({
+        relations: { permission: true },
+      })
+      return allRole
+    } catch (e) {
       throw e
     }
   }
@@ -46,7 +54,7 @@ export class RoleService {
     try {
       const role = await this.roleRepository.findOne({
         where: { slug: slug },
-        relations: {  permission: true }
+        relations: { permission: true },
       })
       return role
     } catch (e) {
@@ -56,27 +64,80 @@ export class RoleService {
 
   async getRoleById(id: number) {
     try {
-      const role = await this.roleRepository.findOneBy({ id })
+      const role = await this.roleRepository.findOne({
+        where: { id },
+        relations: { permission: true },
+      })
+      if (!role) {
+        throw new NotFoundException('Role không tồn tại')
+      }
       return role
     } catch (e) {
       throw e
     }
   }
 
-  async createRole({ name, slug }: CreateRoleDto) {
+  async createRole({ name, slug, permissions }: CreateRoleDto) {
     try {
+      const checkExistRole = await this.roleRepository.findOne({
+        where: {
+          slug: slug,
+        },
+      })
+      if (checkExistRole) {
+        throw new ConflictException('Role existed')
+      }
+
       const result = this.roleRepository.create({ name, slug })
       const role = await this.roleRepository.save(result)
 
+      for (const subject of Object.keys(permissions)) {
+        permissions[subject].forEach((action: actionEnum) => {
+          this.permissionService.createPermission({ action, subject, role })
+        })
+      }
+
       return role
     } catch (e) {
       throw e
     }
   }
 
-  async updateRole(id: number) {
+  async updateRole(id: number, { name, slug, permissions }: UpdateRoleDto) {
+    const result = await this.roleRepository.findOne({
+      where: { id },
+      relations: { permission: true },
+    })
+
+    if (!result) {
+      throw new NotFoundException('Role không tồn tại')
+    }
+
+    let permissionCurrent = [...result.permission]
+
+    for (const subject of Object.keys(permissions)) {
+      permissions[subject].forEach((action: actionEnum) => {
+        this.permissionService.createPermission({ action, subject, role: result })
+        permissionCurrent = permissionCurrent.filter(
+          (p) => !(p.action === action && p.subject === subject),
+        )
+      })
+    }
+
+    result.permission = result.permission.filter(p => !permissionCurrent.includes(p))
+    await this.roleRepository.save(result)
+
+    return role
+  }
+
+  async deleteRoleId(id: number) {
     try {
-      return { msg: 'update role' }
+      const role = await this.roleRepository.findOneBy({ id })
+      if (!role) {
+        throw new NotFoundException('Không tìm thấy tên vai trò')
+      }
+      await this.roleRepository.remove(role)
+      return role
     } catch (e) {
       throw e
     }
