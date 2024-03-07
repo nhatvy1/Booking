@@ -60,7 +60,8 @@ export class PermissionService {
             subject: subject,
           })
           newPermission.role = [...(newPermission?.role || []), role]
-          return this.permissionRepository.save(newPermission)
+          await this.permissionRepository.save(newPermission)
+          return newPermission
         }
       }
     } catch (e) {

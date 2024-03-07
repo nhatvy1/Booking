@@ -22,16 +22,22 @@ export class RoleService {
 
   async initRole() {
     try {
-      const admin = this.roleRepository.create({
-        name: 'Super Admin',
-        slug: role.ADMIN,
-      })
-      await this.roleRepository.save(admin)
       const customer = this.roleRepository.create({
         name: 'Người dùng',
         slug: role.CUSTOMER,
       })
       await this.roleRepository.save(customer)
+
+      const admin = this.roleRepository.create({
+        name: 'Super Admin',
+        slug: role.ADMIN,
+      })
+      await this.roleRepository.save(admin)
+      await this.permissionService.createPermission({
+        subject: 'all',
+        action: actionEnum.MANAGE,
+        role: admin,
+      })
 
       return { mesage: 'Success' }
     } catch (e) {
@@ -117,15 +123,22 @@ export class RoleService {
 
     for (const subject of Object.keys(permissions)) {
       permissions[subject].forEach((action: actionEnum) => {
-        this.permissionService.createPermission({ action, subject, role: result })
+        this.permissionService.createPermission({
+          action,
+          subject,
+          role: result,
+        })
         permissionCurrent = permissionCurrent.filter(
           (p) => !(p.action === action && p.subject === subject),
         )
       })
     }
 
-    result.permission = result.permission.filter(p => !permissionCurrent.includes(p))
-    await this.roleRepository.save(result)
+    permissionCurrent.forEach(async (permission)=> {
+      result.permission = result.permission.filter(p => p.id !== permission.id)
+      await this.roleRepository.save(result)
+    })
+
 
     return role
   }

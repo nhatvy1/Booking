@@ -75,7 +75,7 @@ export class RoleController {
     try {
       const result =  await this.roleService.updateRole(id, updateRole)
       return Response({
-        message: 'success',
+        message: 'success update role',
         statusCode: HttpStatus.OK,
         result
       })
