@@ -4,10 +4,10 @@ import { CreateUserDto } from '../user/dto/create-user.dto'
 import { Response } from 'src/utils/response.type'
 import { LoginDto } from './dto/login.dto'
 import { JwtAuthGuard } from 'src/guards/jwt.auth.guard'
-import { GetCurrentUser } from 'src/decorator/auth.user.decorator'
 import { JwtPayload } from './interfaces/jwt.payload.interface'
 import { JwtRefreshGuard } from 'src/guards/jwt-auth-refresh.guard'
 import { TokenVerify } from './interfaces/token.interface'
+import { GetCurrentUser } from 'src/decorator/authentication.decorator'
 
 @Controller('auth')
 export class AuthController {

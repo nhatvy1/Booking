@@ -7,6 +7,7 @@ import { TokenVerify, Tokens } from './interfaces/token.interface'
 import { JwtService } from '@nestjs/jwt'
 import { JWT_EXPIRES, JWT_SECRET, REFRESH_JWT_EXPIRES, REFRESH_JWT_SECRET } from 'src/utils/constant'
 import { JwtPayload } from './interfaces/jwt.payload.interface'
+import { mapPermission } from 'src/utils/permission'
 
 @Injectable()
 export class AuthService {
@@ -48,10 +49,9 @@ export class AuthService {
   async login(login: LoginDto) {
     const user = await this.userService.login(login)
 
-    if (!user) {
-      throw new UnauthorizedException('Tài khoản hoặc mật khẩu không đúng')
-    }
+    console.log(user)
     const isValidPassword = Hash.compare(login.password, user.password)
+
     if (!isValidPassword) {
       throw new UnauthorizedException('Tài khoản hoặc mật khẩu không đúng')
     }

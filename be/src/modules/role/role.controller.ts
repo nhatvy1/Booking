@@ -3,7 +3,6 @@ import { RoleService } from "./role.service";
 import { Response } from "src/utils/response.type";
 import { CreateRoleDto } from "./dto/create.role.dto";
 import { JwtAuthGuard } from "src/guards/jwt.auth.guard";
-import { actionEnum } from "../permission/permission.entity";
 
 @Controller('role')
 @UseGuards(JwtAuthGuard)

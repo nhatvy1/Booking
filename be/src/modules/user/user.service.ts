@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common'
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from './user.entity'
@@ -7,12 +7,14 @@ import { Hash } from 'src/utils/hash'
 import { LoginDto } from '../auth/dto/login.dto'
 import { RoleService } from '../role/role.service'
 import { role } from 'src/utils/role'
+import { PermissionService } from '../permission/permission.service'
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly roleService: RoleService,
+    private readonly permissionService: PermissionService
   ) {}
 
   checkUser(email: string) {
@@ -39,14 +41,46 @@ export class UserService {
     return user
   }
 
-  login(signInDto: LoginDto): Promise<User> {
-    return this.userRepository
-      .createQueryBuilder('user')
+  async login(signInDto: LoginDto) {
+    try {
+      const user = await this.userRepository
+        .createQueryBuilder('user')
+        .leftJoinAndSelect('user.role', 'role')
+        .select(['user', 'role'])
+        .where({ email: signInDto.email })
+        .addSelect(['user.password'])
+        .getOne()
+  
+      if (!user) {
+        throw new NotFoundException('Người dùng không tồn tại')
+      }
+      
+      // console.log('Check user: ', user)
+      const findPermission = await this.permissionService.getPermissionByRole(user.role.id)
+    
+      return { ... user, permission: findPermission}
+    } catch(e) {
+      throw e
+    }
+  }
+
+  async getUserById(id: number) {
+    try {
+      const user = await this.userRepository.createQueryBuilder('user')
       .leftJoinAndSelect('user.role', 'role')
-      .select(['user', 'role.slug'])
-      .where({ email: signInDto.email })
       .addSelect(['user.password'])
       .getOne()
+
+      const findPermission = await this.permissionService.getPermissionByRole(user.role.id)
+
+      if(!user) {
+        throw new NotFoundException('Người dùng không tồn tại')
+      }
+
+      return { ...user, permissions: findPermission}
+    } catch(e) {
+      throw e
+    }
   }
 
   async getListUsers() {
