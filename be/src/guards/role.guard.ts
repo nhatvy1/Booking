@@ -25,10 +25,38 @@ export class RolesGuard implements CanActivate {
     }
 
     const { user } = context.switchToHttp().getRequest()
+
     if (!user) {
       throw new UnauthorizedException()
     }
 
-    return true
+    let flag = false
+
+    const { permissions } = user
+
+    for(const key of Object.keys(permissions)) {
+      permissions[key].map((item: any)=> {
+        if(item === actionEnum.MANAGE && key === 'all') {
+          console.log(`Case 1: ${item}, ${subject}`)
+          flag = true
+        }
+
+        if(item === actionEnum.MANAGE && key === subject) {
+          console.log(`Case 2: ${item}, ${subject}`)
+          flag = true
+        }
+
+        if(item === action && key === subject) {
+          console.log(`Case 3: ${item}, ${subject}`)
+          flag = true
+        }
+      })
+    }
+
+    if(flag) {
+      return true
+    }
+
+    throw new UnauthorizedException('Bạn không có quyền truy cập')
   }
 }

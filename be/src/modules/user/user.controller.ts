@@ -39,7 +39,7 @@ export class UserController {
   }
 
   @Get('/:id') 
-  // @Authorization('user', actionEnum.READ)
+  @Authorization('user', actionEnum.READ)
   async getUserById(@Param('id', ParseIntPipe) id: number) {
     try {
       const result = await this.userService.getUserById(id)

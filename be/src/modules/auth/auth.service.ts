@@ -5,7 +5,12 @@ import { LoginDto } from './dto/login.dto'
 import { Hash } from 'src/utils/hash'
 import { TokenVerify, Tokens } from './interfaces/token.interface'
 import { JwtService } from '@nestjs/jwt'
-import { JWT_EXPIRES, JWT_SECRET, REFRESH_JWT_EXPIRES, REFRESH_JWT_SECRET } from 'src/utils/constant'
+import {
+  JWT_EXPIRES,
+  JWT_SECRET,
+  REFRESH_JWT_EXPIRES,
+  REFRESH_JWT_SECRET,
+} from 'src/utils/constant'
 import { JwtPayload } from './interfaces/jwt.payload.interface'
 import { mapPermission } from 'src/utils/permission'
 
@@ -16,8 +21,12 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async generateToken(userId: number, fullName: string): Promise<Tokens> {
-    const payload: JwtPayload = { userId, fullName }
+  async generateToken(
+    userId: number,
+    fullName: string,
+    permissions: { [key: string]: string[] },
+  ): Promise<Tokens> {
+    const payload: JwtPayload = { userId, fullName, permissions }
     const [access_token, refresh_token] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: JWT_SECRET,
@@ -36,6 +45,7 @@ export class AuthService {
     const { access_token, refresh_token } = await this.generateToken(
       tokenVerify.userId,
       tokenVerify.fullName,
+      tokenVerify.permission,
     )
     return { access_token, refresh_token }
   }
@@ -49,18 +59,22 @@ export class AuthService {
   async login(login: LoginDto) {
     const user = await this.userService.login(login)
 
-    console.log(user)
     const isValidPassword = Hash.compare(login.password, user.password)
 
     if (!isValidPassword) {
       throw new UnauthorizedException('Tài khoản hoặc mật khẩu không đúng')
     }
 
+    const permissions = mapPermission(user.permission)
+
     const { access_token, refresh_token }: Tokens = await this.generateToken(
       user.id,
       user.fullName,
+      permissions
     )
-    delete user.password
-    return { user, access_token, refresh_token }
+
+    const {role, permission, password, ...result} = user
+
+    return { result, access_token, refresh_token }
   }
 }

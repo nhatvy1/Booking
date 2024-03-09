@@ -8,6 +8,7 @@ import { LoginDto } from '../auth/dto/login.dto'
 import { RoleService } from '../role/role.service'
 import { role } from 'src/utils/role'
 import { PermissionService } from '../permission/permission.service'
+import { mapPermission } from 'src/utils/permission'
 
 @Injectable()
 export class UserService {
@@ -55,10 +56,9 @@ export class UserService {
         throw new NotFoundException('Người dùng không tồn tại')
       }
       
-      // console.log('Check user: ', user)
       const findPermission = await this.permissionService.getPermissionByRole(user.role.id)
-    
       return { ... user, permission: findPermission}
+
     } catch(e) {
       throw e
     }

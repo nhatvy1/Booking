@@ -6,6 +6,7 @@ export interface Tokens {
 export interface TokenVerify {
   userId: number
   fullName: string
+  permission: { [key: string]: string[] }
   iat: number
   exp: number
   refreshToken: string

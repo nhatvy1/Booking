@@ -12,7 +12,7 @@ export const mapPermission = (permissions: Permission[]) => {
 
   for (const key of Object.keys(groupBySubject)) {
     permissionMap[key] = [];
-    groupBySubject[key].forEach((item) => {
+    groupBySubject[key].forEach((item: Permission) => {
       permissionMap[key].push(item.action);
     });
   }
