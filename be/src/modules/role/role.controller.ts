@@ -5,7 +5,7 @@ import { CreateRoleDto } from "./dto/create.role.dto";
 import { JwtAuthGuard } from "src/guards/jwt.auth.guard";
 
 @Controller('role')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
