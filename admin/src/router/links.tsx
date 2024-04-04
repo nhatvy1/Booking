@@ -2,6 +2,7 @@ import { RiGroupLine } from "react-icons/ri";
 import { IoHomeOutline } from "react-icons/io5";
 import DashboardHome from "../pages/Dashboard/DashboardHome";
 import ManageUser from "../pages/Dashboard/quan-ly-tai-khoan/ManageUser";
+import { MdOutlineSecurity } from "react-icons/md";
 
 export const links = [
   {
@@ -17,9 +18,9 @@ export const links = [
     element: <ManageUser />
   },
   {
-    name: 'Quản lý tài khoản',
+    name: 'Quản lý phân quyền',
     href: '/admin/quan-ly-phan-quyen',
-    icon: RiGroupLine,
+    icon: MdOutlineSecurity,
     element: <h1>Quan ly phan quyen</h1>
   },
 ]
