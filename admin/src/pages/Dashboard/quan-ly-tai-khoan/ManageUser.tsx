@@ -1,19 +1,25 @@
 import { Pagination, Space, Table, Tooltip } from 'antd'
 import type { TableProps } from 'antd'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useEffect } from 'react'
-import { getListUser, selectEditUser } from '../../../store/slices/user.slice'
+import { lazy, Suspense, useEffect, useState } from 'react'
+import { addUser, getListUser, selectEditUser } from '../../../store/slices/user.slice'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/store'
 import { CiEdit } from 'react-icons/ci'
 import { AiOutlineDelete } from 'react-icons/ai'
 import UserStatus from '../../../components/status/UserStatus'
 import AddEditUser from '../../../components/dasboard/quan-ly-nguoi-dung/AddEditUser'
+import { useLocation } from 'react-router-dom'
 
 const ManageUser = () => {
+  // const { search } = useLocation() // get the search ( query string) from the location
+
+  const [limit, setLimit] = useState(10)
+  const [page, setPage] = useState(1)
+
   const dispatch = useAppDispatch()
 
-  const listUsers= useSelector((state: RootState) => state.user.listUsers)
+  const { listUsers, totalResults } = useSelector((state: RootState) => state.user)
 
   const columns: TableProps<IUser>['columns'] = [
     {
@@ -45,14 +51,18 @@ const ManageUser = () => {
         return (
           <Space size='middle'>
             <Tooltip title={<span className='text-black'>Cập nhật người dùng</span>} color='white'>
-              <CiEdit
-                size={24}
-                onClick={() => dispatch(selectEditUser(record))}
-                className='cursor-pointer text-blue-600'
-              />
+              <div>
+                <CiEdit
+                  size={24}
+                  onClick={() => dispatch(selectEditUser(record))}
+                  className='cursor-pointer text-blue-600'
+                />
+              </div>
             </Tooltip>
             <Tooltip title={<span className='text-black'>Xóa người dùng</span>} color='white'>
-              <AiOutlineDelete size={24} className='cursor-pointer text-red-600' />
+              <div>
+                <AiOutlineDelete size={24} className='cursor-pointer text-red-600' />
+              </div>
             </Tooltip>
           </Space>
         )
@@ -60,16 +70,38 @@ const ManageUser = () => {
     },
   ]
 
+  const handleOnChange = (page: number, limit: number) => {
+    setPage(page)
+    setLimit(limit)
+  }
+
   useEffect(() => {
-    dispatch(getListUser())
-  }, [])
+    dispatch(getListUser({ page, limit }))
+  }, [page, limit])
 
   return (
-    <div className=''>
-      <Table columns={columns} dataSource={listUsers} pagination={false} />
+    <div className='mb-3'>
+      <div className='flex justify-end mb-3'>
+        <button className='p-2 bg-meta-5 rounded-md text-white' onClick={() => dispatch(addUser())}>
+          Thêm người dùng
+        </button>
+      </div>
+      <Table
+        columns={columns}
+        dataSource={listUsers}
+        pagination={false}
+        rowKey={(record: any) => record.id}
+      />
 
       <div className='flex justify-end mt-4'>
-        <Pagination defaultCurrent={6} total={500} />
+        <Pagination
+          current={page || 1}
+          total={totalResults}
+          pageSize={limit}
+          onChange={handleOnChange}
+          showSizeChanger
+          pageSizeOptions={[5, 10, 20]}
+        />
       </div>
 
       <AddEditUser />

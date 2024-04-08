@@ -1,10 +1,22 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Put, UseGuards, } from '@nestjs/common';
-import { UserService } from './user.service';
-import { Response } from 'src/utils/response.type';
-import { JwtAuthGuard } from 'src/guards/jwt.auth.guard';
-import { Authorization } from 'src/decorator/authorization.decorator';
-import { actionEnum } from '../permission/permission.entity';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common'
+import { UserService } from './user.service'
+import { Response } from 'src/utils/response.type'
+import { JwtAuthGuard } from 'src/guards/jwt.auth.guard'
+import { Authorization } from 'src/decorator/authorization.decorator'
+import { actionEnum } from '../permission/permission.entity'
+import { UpdateUserDto } from './dto/update-user.dto'
+import { FilterUserDto } from './dto/filter-user.dto'
 
 @Controller('user')
 @UseGuards(JwtAuthGuard)
@@ -12,15 +24,15 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  async getListUsers() {
+  async getListUsers(@Query() query: FilterUserDto) {
     try {
-      const result = await this.userService.getListUsers()
+      const result = await this.userService.getListUsers(query)
       return Response({
         message: 'success',
         statusCode: HttpStatus.OK,
-        result
+        result,
       })
-    } catch(e) {
+    } catch (e) {
       throw e
     }
   }
@@ -32,14 +44,12 @@ export class UserController {
       return Response({
         message: 'success',
         statusCode: HttpStatus.OK,
-        result
+        result,
       })
-    } catch(e) {
-
-    }
+    } catch (e) {}
   }
 
-  @Get('/:id') 
+  @Get('/:id')
   @Authorization('user', actionEnum.READ)
   async getUserById(@Param('id', ParseIntPipe) id: number) {
     try {
@@ -47,24 +57,27 @@ export class UserController {
       return Response({
         message: 'success',
         statusCode: HttpStatus.OK,
-        result
+        result,
       })
-    } catch(e) {
+    } catch (e) {
       throw e
     }
   }
 
   @Put(':id')
-  async updateUser(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
+  async updateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     try {
       const result = await this.userService.updateUserById(id, updateUserDto)
-      
+
       return Response({
         message: 'success',
         statusCode: HttpStatus.OK,
-        result
+        result,
       })
-    } catch(e) {
+    } catch (e) {
       throw e
     }
   }

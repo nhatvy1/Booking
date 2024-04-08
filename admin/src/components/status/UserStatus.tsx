@@ -1,4 +1,4 @@
-interface Props {
+ interface Props {
   status: number
 }
 
@@ -6,12 +6,12 @@ const renderStatus = (status: number) => {
   switch (status) {
     case 0:
       return (
-        <span className="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Đang hoạt động</span>
+        <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">Chờ duyệt</span>
       )
     case 1:
       return (
         <span className='bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400'>
-          Đã duyệt
+          Đang hoạt động
         </span>
       )
     case -1:

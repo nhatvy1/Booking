@@ -13,6 +13,7 @@ import { RoleService } from '../role/role.service'
 import { role } from 'src/utils/role'
 import { PermissionService } from '../permission/permission.service'
 import { mapPermission } from 'src/utils/permission'
+import { FilterUserDto } from './dto/filter-user.dto'
 
 @Injectable()
 export class UserService {
@@ -91,14 +92,22 @@ export class UserService {
     }
   }
 
-  async getListUsers() {
+  async getListUsers(query: FilterUserDto) {
     try {
-      const response = await this.userRepository.find({
-        order: {
-          createdAt: 'DESC',
-        },
+      const { limit, page, search } = query
+      const skip = (page - 1) * limit
+
+      const [list, totalResults] = await this.userRepository.findAndCount({
+        order: { createdAt: 'DESC' },
+        take: limit,
+        skip: skip,
       })
-      return response
+      return {
+        result: list,
+        totalResults: totalResults,
+        limit: limit,
+        page: page,
+      }
     } catch (e) {
       throw e
     }
