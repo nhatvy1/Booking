@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from './user.entity'
@@ -15,7 +19,7 @@ export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly roleService: RoleService,
-    private readonly permissionService: PermissionService
+    private readonly permissionService: PermissionService,
   ) {}
 
   checkUser(email: string) {
@@ -51,34 +55,38 @@ export class UserService {
         .where({ email: signInDto.email })
         .addSelect(['user.password'])
         .getOne()
-  
+
       if (!user) {
         throw new NotFoundException('Người dùng không tồn tại')
       }
-      
-      const findPermission = await this.permissionService.getPermissionByRole(user.role.id)
-      return { ... user, permission: findPermission}
 
-    } catch(e) {
+      const findPermission = await this.permissionService.getPermissionByRole(
+        user.role.id,
+      )
+      return { ...user, permission: findPermission }
+    } catch (e) {
       throw e
     }
   }
 
   async getUserById(id: number) {
     try {
-      const user = await this.userRepository.createQueryBuilder('user')
-      .leftJoinAndSelect('user.role', 'role')
-      .addSelect(['user.password'])
-      .getOne()
+      const user = await this.userRepository
+        .createQueryBuilder('user')
+        .leftJoinAndSelect('user.role', 'role')
+        .addSelect(['user.password'])
+        .getOne()
 
-      const findPermission = await this.permissionService.getPermissionByRole(user.role.id)
+      const findPermission = await this.permissionService.getPermissionByRole(
+        user.role.id,
+      )
 
-      if(!user) {
+      if (!user) {
         throw new NotFoundException('Người dùng không tồn tại')
       }
 
-      return { ...user, permissions: findPermission}
-    } catch(e) {
+      return { ...user, permissions: findPermission }
+    } catch (e) {
       throw e
     }
   }
@@ -102,6 +110,24 @@ export class UserService {
       if (user) {
         await this.userRepository.remove(user)
       }
+      return user
+    } catch (e) {
+      throw e
+    }
+  }
+
+  async updateUserById(id: number, updateUserDto) {
+    try {
+      const user = await this.userRepository.findOneBy({ id })
+      if (!user) {
+        throw new NotFoundException('Người dùng không tồn tại')
+      }
+
+      for (const key of Object.keys(updateUserDto)) {
+        user[key] = updateUserDto[key]
+      }
+
+      await this.userRepository.save(user)
       return user
     } catch (e) {
       throw e

@@ -1,9 +1,10 @@
-import { Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, UseGuards, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Put, UseGuards, } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Response } from 'src/utils/response.type';
 import { JwtAuthGuard } from 'src/guards/jwt.auth.guard';
 import { Authorization } from 'src/decorator/authorization.decorator';
 import { actionEnum } from '../permission/permission.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 @UseGuards(JwtAuthGuard)
@@ -43,6 +44,21 @@ export class UserController {
   async getUserById(@Param('id', ParseIntPipe) id: number) {
     try {
       const result = await this.userService.getUserById(id)
+      return Response({
+        message: 'success',
+        statusCode: HttpStatus.OK,
+        result
+      })
+    } catch(e) {
+      throw e
+    }
+  }
+
+  @Put(':id')
+  async updateUser(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
+    try {
+      const result = await this.userService.updateUserById(id, updateUserDto)
+      
       return Response({
         message: 'success',
         statusCode: HttpStatus.OK,
