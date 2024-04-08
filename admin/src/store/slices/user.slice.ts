@@ -24,11 +24,22 @@ const initialState: UserSlice = {
   },
 }
 
-export const getListUser = createAsyncThunk(
-  'user/getListUser',
-  async (_, { rejectWithValue }) => {
+export const getListUser = createAsyncThunk('user/getListUser', async (_, { rejectWithValue }) => {
+  try {
+    const response: IResponseListUser = await instanceAuth.get('/user')
+    return response
+  } catch (e) {
+    console.log(e)
+    return rejectWithValue(e)
+  }
+})
+
+export const updateUserById = createAsyncThunk(
+  'user/updateUserById',
+  async ({ id, body }: { id: number | null; body: IUser }, { rejectWithValue }) => {
     try {
-      const response: IResponseListUser = await instanceAuth.get('/user')
+      const response: any = await instanceAuth.put(`/user/${id}`, body)
+      console.log('Store: ', response)
       return response
     } catch (e) {
       console.log(e)
@@ -89,44 +100,53 @@ const userSlice = createSlice({
       .addCase(getListUser.pending, (state) => {
         state.loading = true
       })
-      .addCase(
-        getListUser.fulfilled,
-        (state, action: PayloadAction<IResponseListUser>) => {
-          return { ...state, listUsers: action.payload.result }
-        },
-      )
+      .addCase(getListUser.fulfilled, (state, action: PayloadAction<IResponseListUser>) => {
+        return { ...state, listUsers: action.payload.result }
+      })
       .addCase(getListUser.rejected, (state) => {
         return { ...state, listUsers: [], loading: false }
+      })
+
+      // update
+      .addCase(updateUserById.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(updateUserById.fulfilled, (state, action: PayloadAction<any>) => {
+        toast.success(action?.payload?.message || 'Cập nhật thành công')
+        return {
+          ...state,
+          editUserModal: false,
+          listUsers: state.listUsers.map((user) => {
+            if (user.id === action.payload.result.id) {
+              user = action.payload.result
+            }
+            return user
+          }),
+        }
+      })
+      .addCase(updateUserById.rejected, (state) => {
+        return { ...state, loading: false }
       })
 
       // delete
       .addCase(deleteUserById.pending, (state) => {
         state.loading = true
       })
-      .addCase(
-        deleteUserById.fulfilled,
-        (state, action: PayloadAction<any>) => {
-          toast.success(action?.payload?.message || 'Xóa thành công')
-          return {
-            ...state,
-            deleteUserModal: false,
-            listUsers: state.listUsers.filter(
-              (user) => user.id !== action.payload.result.id,
-            ),
-          }
-        },
-      )
+      .addCase(deleteUserById.fulfilled, (state, action: PayloadAction<any>) => {
+        toast.success(action?.payload?.message || 'Xóa thành công')
+        return {
+          ...state,
+          deleteUserModal: false,
+          listUsers: state.listUsers.filter((user) => user.id !== action.payload.result.id),
+        }
+      })
       .addCase(deleteUserById.rejected, (state) => {
         return { ...state, loading: false }
       })
   },
 })
 
-export const {
-  selectEditUser,
-  closeEditUserModal,
-  openDeleteUserById,
-  closeDeleteUserById,
-} = userSlice.actions
+export const { selectEditUser, closeEditUserModal, openDeleteUserById, closeDeleteUserById } =
+  userSlice.actions
 const userReducer = userSlice.reducer
 export default userReducer
