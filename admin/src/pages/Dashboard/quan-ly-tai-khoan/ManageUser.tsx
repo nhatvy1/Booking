@@ -1,7 +1,7 @@
-import { Pagination, Space, Table, Tooltip } from 'antd'
+import { Button, Pagination, Space, Table, Tooltip } from 'antd'
 import type { TableProps } from 'antd'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { addUser, getListUser, selectEditUser } from '../../../store/slices/user.slice'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/store'
@@ -9,13 +9,18 @@ import { CiEdit } from 'react-icons/ci'
 import { AiOutlineDelete } from 'react-icons/ai'
 import UserStatus from '../../../components/status/UserStatus'
 import AddEditUser from '../../../components/dasboard/quan-ly-nguoi-dung/AddEditUser'
-import { useLocation } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
+import Search from 'antd/es/input/Search'
+import queryString from 'query-string'
+import useQueryString from '../../../hooks/useQueryString'
+import usePushQueryString from '../../../hooks/usePushQueryString'
 
 const ManageUser = () => {
-  // const { search } = useLocation() // get the search ( query string) from the location
-
-  const [limit, setLimit] = useState(10)
-  const [page, setPage] = useState(1)
+  let [searchParams, setSearchParams] = useSearchParams()
+  const { page, limit } = useQueryString()
+  const pushQueryString = usePushQueryString()
+  
+  const [search, setSearch] = useState(searchParams.get('search') || '')
 
   const dispatch = useAppDispatch()
 
@@ -71,20 +76,38 @@ const ManageUser = () => {
   ]
 
   const handleOnChange = (page: number, limit: number) => {
-    setPage(page)
-    setLimit(limit)
+    pushQueryString({ page, limit, search })
+  }
+
+  const handleSearch = (value: string) => {
+    setSearch(value)
+    const filter = queryString.stringify({ limit, page, search })
+    setSearchParams(`${filter}`)
   }
 
   useEffect(() => {
-    dispatch(getListUser({ page, limit }))
-  }, [page, limit])
+    dispatch(getListUser(searchParams.toString()))
+  }, [page, limit, search])
 
   return (
     <div className='mb-3'>
-      <div className='flex justify-end mb-3'>
-        <button className='p-2 bg-meta-5 rounded-md text-white' onClick={() => dispatch(addUser())}>
+      <div className='flex justify-between mb-3'>
+        <div>
+          <Search
+            placeholder='Tìm kiếm email, tên'
+            onSearch={handleSearch}
+            enterButton
+            className='w-[300px]'
+            size='large'
+          />
+        </div>
+        <Button
+          className='bg-meta-5 rounded-md text-white border border-meta-5'
+          size='large'
+          onClick={() => dispatch(addUser())}
+        >
           Thêm người dùng
-        </button>
+        </Button>
       </div>
       <Table
         columns={columns}
@@ -95,9 +118,9 @@ const ManageUser = () => {
 
       <div className='flex justify-end mt-4'>
         <Pagination
-          current={page || 1}
+          current={parseInt(searchParams.get('page') || '1')}
           total={totalResults}
-          pageSize={limit}
+          pageSize={parseInt(searchParams.get('limit') || '10')}
           onChange={handleOnChange}
           showSizeChanger
           pageSizeOptions={[5, 10, 20]}

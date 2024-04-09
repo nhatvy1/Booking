@@ -46,7 +46,9 @@ export class UserController {
         statusCode: HttpStatus.OK,
         result,
       })
-    } catch (e) {}
+    } catch (e) {
+      throw e
+    }
   }
 
   @Get('/:id')
@@ -55,7 +57,7 @@ export class UserController {
     try {
       const result = await this.userService.getUserById(id)
       return Response({
-        message: 'success',
+        message: 'Delete user success',
         statusCode: HttpStatus.OK,
         result,
       })

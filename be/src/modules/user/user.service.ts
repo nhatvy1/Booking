@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { ILike, Repository } from 'typeorm'
 import { User } from './user.entity'
 import { CreateUserDto } from './dto/create-user.dto'
 import { Hash } from 'src/utils/hash'
@@ -12,8 +12,8 @@ import { LoginDto } from '../auth/dto/login.dto'
 import { RoleService } from '../role/role.service'
 import { role } from 'src/utils/role'
 import { PermissionService } from '../permission/permission.service'
-import { mapPermission } from 'src/utils/permission'
 import { FilterUserDto } from './dto/filter-user.dto'
+import { UpdateUserDto } from './dto/update-user.dto'
 
 @Injectable()
 export class UserService {
@@ -101,6 +101,10 @@ export class UserService {
         order: { createdAt: 'DESC' },
         take: limit,
         skip: skip,
+        where: [
+          { fullName: ILike(`%${search}%`) }, // Search within name
+          { email: ILike(`%${search}%`) }, // Search within email
+        ],
       })
       return {
         result: list,
@@ -116,16 +120,18 @@ export class UserService {
   async deleteUserById(id: number) {
     try {
       const user = await this.userRepository.findOneBy({ id })
-      if (user) {
-        await this.userRepository.remove(user)
+      if (!user) {
+        throw new NotFoundException('Người dùng không tồn tại')
       }
+
+      await this.userRepository.remove(user)
       return user
     } catch (e) {
       throw e
     }
   }
 
-  async updateUserById(id: number, updateUserDto) {
+  async updateUserById(id: number, updateUserDto: UpdateUserDto) {
     try {
       const user = await this.userRepository.findOneBy({ id })
       if (!user) {
@@ -133,7 +139,9 @@ export class UserService {
       }
 
       for (const key of Object.keys(updateUserDto)) {
-        user[key] = updateUserDto[key]
+        if(key !== 'email') {
+          user[key] = updateUserDto[key]
+        }
       }
 
       await this.userRepository.save(user)

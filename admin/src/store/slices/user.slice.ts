@@ -1,7 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import instanceAuth from '../../axios/axios.auth'
 import { toast } from 'react-toastify'
-import queryString from 'query-string';
+import queryString from 'query-string'
 
 interface UserSlice {
   loading: boolean
@@ -24,7 +24,7 @@ const initialState: UserSlice = {
     status: null,
     createdAt: null,
   },
-  totalResults: 0
+  totalResults: 0,
 }
 
 export const createUser = createAsyncThunk(
@@ -42,14 +42,18 @@ export const createUser = createAsyncThunk(
 
 export const getListUser = createAsyncThunk(
   'user/getListUser',
-  async ({ page, limit }: { page: number; limit: number }, { rejectWithValue }) => {
+  async (
+    // { page, limit, search }: { page: number; limit: number; search: string },
+   filter: string,
+    { rejectWithValue },
+  ) => {
     try {
-      const search = {
-        page, 
-        limit, 
-        search: ''
-      }
-      const filter = queryString.stringify(search)
+      // const searchParam = {
+      //   page,
+      //   limit,
+      //   search,
+      // }
+      // const filter = queryString.stringify(searchParam)
       const response: IResponseListUser = await instanceAuth.get(`/user?${filter}`)
       return response
     } catch (e) {
@@ -119,7 +123,7 @@ const userSlice = createSlice({
         status: null,
         createdAt: null,
       }
-    }
+    },
   },
   extraReducers(builder) {
     builder
