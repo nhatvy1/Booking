@@ -1,7 +1,7 @@
 import { Button, Pagination, Space, Table, Tooltip } from 'antd'
 import type { TableProps } from 'antd'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { addUser, getListUser, selectEditUser } from '../../../store/slices/user.slice'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/store'
@@ -11,17 +11,14 @@ import UserStatus from '../../../components/status/UserStatus'
 import AddEditUser from '../../../components/dasboard/quan-ly-nguoi-dung/AddEditUser'
 import { useSearchParams } from 'react-router-dom'
 import Search from 'antd/es/input/Search'
-import queryString from 'query-string'
 import useQueryString from '../../../hooks/useQueryString'
 import usePushQueryString from '../../../hooks/usePushQueryString'
 
 const ManageUser = () => {
-  let [searchParams, setSearchParams] = useSearchParams()
-  const { page, limit } = useQueryString()
+  let [searchParams] = useSearchParams()
+  const { page, limit, search } = useQueryString()
   const pushQueryString = usePushQueryString()
   
-  const [search, setSearch] = useState(searchParams.get('search') || '')
-
   const dispatch = useAppDispatch()
 
   const { listUsers, totalResults } = useSelector((state: RootState) => state.user)
@@ -80,9 +77,7 @@ const ManageUser = () => {
   }
 
   const handleSearch = (value: string) => {
-    setSearch(value)
-    const filter = queryString.stringify({ limit, page, search })
-    setSearchParams(`${filter}`)
+    pushQueryString({ limit, page, search: value })
   }
 
   useEffect(() => {

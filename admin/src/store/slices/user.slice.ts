@@ -133,7 +133,6 @@ const userSlice = createSlice({
       })
       .addCase(createUser.fulfilled, (state, action: PayloadAction<any>) => {
         const user: IUser = action.payload.result
-        closeEditUserModal()
         toast.success('Thêm mới thành công')
         return {
           ...state,
@@ -142,8 +141,9 @@ const userSlice = createSlice({
           currentUser: { id: null, email: '', fullName: '', status: null, createdAt: null },
         }
       })
-      .addCase(createUser.rejected, (state) => {
-        return { ...state, listUsers: [], loading: false }
+      .addCase(createUser.rejected, (state, action: PayloadAction<any>) => {
+        toast.error(action?.payload?.message || 'Vui lòng thử lại sau')
+        return { ...state }
       })
 
       // get all user

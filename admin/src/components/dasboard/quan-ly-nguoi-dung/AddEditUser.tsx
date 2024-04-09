@@ -13,12 +13,14 @@ const AddEditUser = () => {
     currentUser.id
       ? dispatch(updateUserById({ id: currentUser.id || -1, body: values }))
       : dispatch(createUser(values))
+
+    form.resetFields()
   }
 
   const [form] = Form.useForm()
 
   useEffect(() => {
-    if(currentUser.id) {
+    if (currentUser.id) {
       form.setFieldsValue(currentUser)
     }
   }, [currentUser])

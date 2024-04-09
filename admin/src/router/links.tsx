@@ -3,7 +3,6 @@ import { IoHomeOutline } from "react-icons/io5";
 import DashboardHome from "../pages/Dashboard/DashboardHome";
 import ManageUser from "../pages/Dashboard/quan-ly-tai-khoan/ManageUser";
 import { MdOutlineSecurity } from "react-icons/md";
-import Demo from "../pages/Dashboard/demo/demo";
 
 export const links = [
   {
@@ -23,11 +22,5 @@ export const links = [
     href: '/admin/quan-ly-phan-quyen',
     icon: MdOutlineSecurity,
     element: <h1>Quan ly phan quyen</h1>
-  },
-  {
-    name: 'Demo',
-    href: '/admin/demo',
-    icon: MdOutlineSecurity,
-    element: <Demo />
-  },
+  }
 ]
