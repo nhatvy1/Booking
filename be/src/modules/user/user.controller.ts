@@ -17,6 +17,7 @@ import { Authorization } from 'src/decorator/authorization.decorator'
 import { actionEnum } from '../permission/permission.entity'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { FilterUserDto } from './dto/filter-user.dto'
+import { ListFilterDto } from '../base/filter.dto'
 
 @Controller('user')
 @UseGuards(JwtAuthGuard)
@@ -33,6 +34,20 @@ export class UserController {
         result,
       })
     } catch (e) {
+      throw e
+    }
+  }
+
+  @Get('/list-user')
+  async getUsersPagination(@Query() filter: ListFilterDto) {
+    try {
+      const result = await this.userService.getDemo(filter)
+      return Response({
+        message: 'success',
+        statusCode: HttpStatus.OK,
+        result
+      })
+    } catch(e) {
       throw e
     }
   }

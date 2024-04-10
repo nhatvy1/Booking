@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 const AddEditUser = () => {
   const dispatch = useAppDispatch()
   const { currentUser, editUserModal } = useSelector((state: RootState) => state.user)
+  const [form] = Form.useForm()
 
   const onFinish = async (values: IUser) => {
     currentUser.id
@@ -17,7 +18,10 @@ const AddEditUser = () => {
     form.resetFields()
   }
 
-  const [form] = Form.useForm()
+  const handleCloseForm = () => {
+    form.resetFields()
+    dispatch(closeEditUserModal())
+  }
 
   useEffect(() => {
     if (currentUser.id) {
@@ -30,7 +34,7 @@ const AddEditUser = () => {
       title={currentUser.id ? 'Cập nhật người dùng' : 'Thêm người dùng'}
       open={editUserModal}
       footer={null}
-      onClose={() => dispatch(closeEditUserModal())}
+      onClose={handleCloseForm}
     >
       <Form onFinish={onFinish} layout='vertical' form={form}>
         <Form.Item label='Email' name='email'>

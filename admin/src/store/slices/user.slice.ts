@@ -1,7 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import instanceAuth from '../../axios/axios.auth'
 import { toast } from 'react-toastify'
-import queryString from 'query-string'
 
 interface UserSlice {
   loading: boolean
@@ -43,17 +42,10 @@ export const createUser = createAsyncThunk(
 export const getListUser = createAsyncThunk(
   'user/getListUser',
   async (
-    // { page, limit, search }: { page: number; limit: number; search: string },
    filter: string,
     { rejectWithValue },
   ) => {
     try {
-      // const searchParam = {
-      //   page,
-      //   limit,
-      //   search,
-      // }
-      // const filter = queryString.stringify(searchParam)
       const response: IResponseListUser = await instanceAuth.get(`/user?${filter}`)
       return response
     } catch (e) {

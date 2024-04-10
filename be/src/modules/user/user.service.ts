@@ -14,14 +14,18 @@ import { role } from 'src/utils/role'
 import { PermissionService } from '../permission/permission.service'
 import { FilterUserDto } from './dto/filter-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
+import { SearchService } from '../base/SearchService'
+import { ListFilterDto } from '../base/filter.dto'
 
 @Injectable()
-export class UserService {
+export class UserService extends SearchService<User> {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly roleService: RoleService,
     private readonly permissionService: PermissionService,
-  ) {}
+  ) {
+    super(userRepository)
+  }
 
   checkUser(email: string) {
     return this.userRepository.findOneBy({ email })
@@ -92,6 +96,14 @@ export class UserService {
     }
   }
 
+  async getDemo(filter: ListFilterDto) {
+    try {
+      return this.search(filter, ['email', 'fullName'])
+    } catch (e) {
+      throw e
+    }
+  }
+
   async getListUsers(query: FilterUserDto) {
     try {
       const { limit, page, search } = query
@@ -139,7 +151,7 @@ export class UserService {
       }
 
       for (const key of Object.keys(updateUserDto)) {
-        if(key !== 'email') {
+        if (key !== 'email') {
           user[key] = updateUserDto[key]
         }
       }
