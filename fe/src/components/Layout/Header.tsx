@@ -1,15 +1,23 @@
+'use client'
 import Image from 'next/image'
 import MainSection from '../Commons/Section'
 import { logo1 } from '../../../public/icons'
 import { HiBars3BottomLeft } from 'react-icons/hi2'
 import { LuUserCircle2 } from 'react-icons/lu'
-import { Button } from '@nextui-org/react'
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from '@nextui-org/react'
+import Link from 'next/link'
 
 const Header = () => {
   return (
-    <MainSection>
-      <div className='flex justify-between items-start'>
-        <div className='h-12 w-[120px]  '>
+    <MainSection className='shadow-border'>
+      <div className='container py-4 flex justify-between items-start'>
+        <Link href='/' className='h-12 w-[120px]  '>
           <Image
             src={logo1}
             alt='Logo airbnb'
@@ -17,12 +25,24 @@ const Header = () => {
             height={logo1.height}
             className='w-full h-full object-cover'
           />
-        </div>
+        </Link>
         <div>
-          <Button className='h-12 w-[90px] flex items-center justify-center gap-x-2 border rounded-full px-3 cursor-pointer bg-white border-gray-300 !outline-none'>
-            <HiBars3BottomLeft size={24}/>
-            <LuUserCircle2 size={24}/>
-          </Button>
+          <Dropdown>
+            <DropdownTrigger>
+              <Button className='border border-disabled bg-white rounded-full h-12'>
+                <HiBars3BottomLeft size={24} />
+                <LuUserCircle2 size={24} />
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu>
+              <DropdownItem key='copy'>Đăng ký</DropdownItem>
+              <DropdownItem key='new' showDivider>
+                <Link href='/login'>Đăng nhập</Link>
+              </DropdownItem>
+              <DropdownItem key='edit'>Cho thuê chỗ ở qua Airbnb</DropdownItem>
+              <DropdownItem key='edit'>Trung tâm trợ giúp</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
       </div>
     </MainSection>
