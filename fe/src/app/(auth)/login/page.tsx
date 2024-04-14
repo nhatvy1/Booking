@@ -41,13 +41,13 @@ const Login = () => {
             <div className='relative'>
               <input
                 type='text'
-                id='filled_success'
-                aria-describedby='filled_success_help'
+                id='email'
+                aria-describedby='email_help'
                 className='block rounded-md px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-white dark:bg-gray-700 border appearance-none dark:text-white focus:outline-none focus:ring-0 peer'
                 placeholder=' '
               />
               <label
-                htmlFor='filled_success'
+                htmlFor='email'
                 className='absolute text-sm text-black dark:text-green-500 duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto'
               >
                 Email
@@ -58,13 +58,13 @@ const Login = () => {
             <div className='relative'>
               <input
                 type='password'
-                id='filled_success'
-                aria-describedby='filled_success_help'
+                id='password'
+                aria-describedby='password_help'
                 className='block rounded-md px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-white dark:bg-gray-700 border appearance-none dark:text-white focus:outline-none focus:ring-0 peer'
                 placeholder=' '
               />
               <label
-                htmlFor='filled_success'
+                htmlFor='password'
                 className='absolute text-sm text-black dark:text-green-500 duration-300 transform -translate-y-4 scale-90 top-4 z-10 origin-[0] start-2.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-90 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto'
               >
                 Mật khẩu
