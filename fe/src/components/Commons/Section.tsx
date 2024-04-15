@@ -1,7 +1,15 @@
 import { ReactNode } from 'react'
 
-const MainSection = ({ children }: { children: ReactNode }) => {
-  return <div className='container py-2'>{children}</div>
+interface Props {
+  children: ReactNode
+  className: string 
+}
+
+const MainSection = ({
+  children,
+  className = '',
+}: Props) => {
+  return <div className={`${className}`}>{children}</div>
 }
 
 export default MainSection
