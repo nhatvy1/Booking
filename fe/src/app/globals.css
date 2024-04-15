@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*:focus {
+  outline: none;
+}
+
+/* Alternatively, target specific components */
+.nextui-button:focus {
+  outline: none;
+}
+
+.nextui-input:focus {
+  outline: none;
+}
