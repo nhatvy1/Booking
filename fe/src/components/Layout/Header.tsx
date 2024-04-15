@@ -39,6 +39,7 @@ const Header = () => {
                 <DropdownItem key='login' as={Link} href='/login' showDivider>
                   Đăng nhập
                 </DropdownItem>
+                <DropdownItem key='profile' as={Link} href='/profile'>Trang cá nhân</DropdownItem>
                 <DropdownItem key='thue'>Cho thuê chỗ ở qua Airbnb</DropdownItem>
                 <DropdownItem key='support'>Trung tâm trợ giúp</DropdownItem>
               </DropdownMenu>

@@ -1,7 +1,6 @@
 'use client'
-import { Input } from '@nextui-org/react'
+import { loginAction } from '@/actions/login'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FaFacebookSquare } from 'react-icons/fa'
@@ -11,9 +10,7 @@ import { TfiEmail } from 'react-icons/tfi'
 import { toast } from 'react-toastify'
 
 const Login = () => {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState(false)
 
   const {
     register,
@@ -21,10 +18,27 @@ const Login = () => {
     formState: { errors },
   } = useForm<ILogin>()
 
-  const onSubmit: SubmitHandler<ILogin> = async (data) => {
+  const onSubmit: SubmitHandler<ILogin> = async (data: ILogin) => {
     try {
       setLoading(true)
+      const res = await loginAction(data)
+      console.log('Check res: ', res)
+      if(res.statusCode === 200) {
+        toast.success('Đăng nhập thành công')
+        const resultNextServer =  await fetch('/api/auth', {
+          method: 'POST',
+          body: JSON.stringify(res.result.access_token),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        console.log('Next server: ', resultNextServer)
+      } else {
+        toast.error(res?.message || 'Đăng nhập thất bại')
+      }
     } catch (e) {
+      console.log(e)
+      toast.error('That bai')
     } finally {
       setLoading(false)
     }
@@ -36,7 +50,7 @@ const Login = () => {
       <hr />
       <div className='p-4'>
         <h3 className='text-[1.375rem] font-semibold'>Chào mừng bạn đến với Airbnb</h3>
-        <form className='my-4'>
+        <form className='my-4' onSubmit={handleSubmit(onSubmit)} method='POST'>
           <div>
             <div className='relative'>
               <input
@@ -44,7 +58,25 @@ const Login = () => {
                 id='email'
                 aria-describedby='email_help'
                 className='block rounded-md px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-white dark:bg-gray-700 border appearance-none dark:text-white focus:outline-none focus:ring-0 peer'
-                placeholder=' '
+                placeholder=''
+                {...register('email', {
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: 'Địa chỉ email không hợp lệ',
+                  },
+                  required: {
+                    value: true,
+                    message: 'Vui lòng nhập email',
+                  },
+                  validate: {
+                    notAdmin: (fieldValue) => {
+                      return fieldValue !== 'chatapp@gmail.com' || 'Hãy thử địa chỉ email khác'
+                    },
+                    notBlacklisted: (fieldValue) => {
+                      return !fieldValue.endsWith('.xyz') || 'Email này không được phép'
+                    },
+                  },
+                })}
               />
               <label
                 htmlFor='email'
@@ -53,15 +85,23 @@ const Login = () => {
                 Email
               </label>
             </div>
+            <p className='text-core text-sm mt-1 ml-1'>{errors.email?.message}</p>
           </div>
           <div className='mt-2'>
             <div className='relative'>
               <input
                 type='password'
                 id='password'
+                autoComplete='off'
                 aria-describedby='password_help'
                 className='block rounded-md px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-white dark:bg-gray-700 border appearance-none dark:text-white focus:outline-none focus:ring-0 peer'
-                placeholder=' '
+                placeholder=''
+                {...register('password', {
+                  required: {
+                    value: true,
+                    message: 'Vui lòng nhập mật khẩu',
+                  },
+                })}
               />
               <label
                 htmlFor='password'
@@ -70,6 +110,7 @@ const Login = () => {
                 Mật khẩu
               </label>
             </div>
+            <p className='text-core text-sm mt-1 ml-1'>{errors.password?.message}</p>
           </div>
           <button className='bg-gradient-core w-full mt-2 rounded-md p-3 text-white'>
             Tiếp tục

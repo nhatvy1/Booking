@@ -5,6 +5,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import ConfigNextUI from '@/components/NextUI/ConfigNextUI'
 import { Footer, Header } from '@/components/Layout'
+import AppProvider from '@/context/AppProvider'
+import { cookies } from 'next/headers'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,15 +20,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const cookieStore = cookies()
+  const sessionToken = cookieStore.get('sessionToken')
+
   return (
     <html lang='en'>
       <body className={inter.className}>
         <ConfigNextUI>
-          <Header />
-          <div className='container'>
-            {children}
-          </div>
-          <Footer />
+          <AppProvider initialSessionToken={sessionToken?.value}>
+            <Header />
+            <div className='container'>
+              {children}
+            </div>
+            <Footer />
+          </AppProvider>
         </ConfigNextUI>
         <ToastContainer
           position='top-right'

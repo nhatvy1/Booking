@@ -15,6 +15,7 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() body: CreateUserDto) {
+    console.log('Check body: ', body)
     const result = await this.authService.register(body)
     return Response({ statusCode: HttpStatus.OK, message: 'Success', result })
   }

@@ -18,6 +18,8 @@ import { actionEnum } from '../permission/permission.entity'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { FilterUserDto } from './dto/filter-user.dto'
 import { ListFilterDto } from '../base/filter.dto'
+import { JwtPayload } from '../auth/interfaces/jwt.payload.interface'
+import { GetCurrentUser } from 'src/decorator/authentication.decorator'
 
 @Controller('user')
 @UseGuards(JwtAuthGuard)
@@ -34,6 +36,20 @@ export class UserController {
         result,
       })
     } catch (e) {
+      throw e
+    }
+  }
+
+  @Get('/profile')
+  async getProfile(@GetCurrentUser() user: JwtPayload) {
+    try {
+      const result = await this.userService.getProfile(user.userId)
+      return Response({
+        message: 'success',
+        statusCode: HttpStatus.OK,
+        result
+      })
+    } catch(e) {
       throw e
     }
   }

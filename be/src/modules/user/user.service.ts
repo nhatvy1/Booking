@@ -96,6 +96,19 @@ export class UserService extends SearchService<User> {
     }
   }
 
+  async getProfile(id: number) {
+    try {
+      const user = await this.userRepository.findOneBy({id})
+
+      if(!user) {
+        throw new NotFoundException('Người dùng không tồn tại')
+      }
+      return user
+    } catch(e) {
+      throw e
+    }
+  }
+
   async getDemo(filter: ListFilterDto) {
     try {
       return this.search(filter, ['email', 'fullName'])
