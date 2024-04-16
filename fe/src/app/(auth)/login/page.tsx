@@ -1,7 +1,7 @@
 'use client'
 import { loginAction } from '@/actions/login'
 import authApiRequest from '@/apiRequest/auth'
-import { useAppContext } from '@/context/AppProvider'
+import { clientSessionToken } from '@/lib/http'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -14,7 +14,6 @@ import { toast } from 'react-toastify'
 
 const Login = () => {
   const router  = useRouter()
-  const { setSessionToken } = useAppContext()
   const [loading, setLoading] = useState(false)
 
   const {
@@ -29,7 +28,7 @@ const Login = () => {
       const { payload } = await loginAction(data)
       if(payload.statusCode === 200) {
         toast.success('Đăng nhập thành công')
-        setSessionToken(payload.result.access_token)
+        clientSessionToken.value = payload.result.access_token
         await authApiRequest.auth({
           sessionToken: payload.result.access_token,
         })

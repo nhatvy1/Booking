@@ -7,8 +7,7 @@ import { LuUserCircle2 } from 'react-icons/lu'
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react'
 import Link from 'next/link'
 import { GrLanguage } from 'react-icons/gr'
-import { useAppContext } from '@/context/AppProvider'
-import { useEffect, useState } from 'react'
+import { clientSessionToken } from '@/lib/http'
 
 const notLogged = [
   {
@@ -45,7 +44,7 @@ const logged = [
 ]
 
 const Header = () => {
-  const { sessionToken } = useAppContext()
+  const sessionToken = clientSessionToken
 
   return (
     <MainSection className='shadow-border sticky top-0 bg-white z-50'>
@@ -67,7 +66,7 @@ const Header = () => {
             <GrLanguage />
           </div>
           <div>
-            {!sessionToken ? (
+            {!sessionToken.value ? (
               <Dropdown>
                 <DropdownTrigger>
                   <Button className='border border-disabled bg-white rounded-full h-12'>

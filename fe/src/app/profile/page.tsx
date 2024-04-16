@@ -4,7 +4,6 @@ import { cookies } from 'next/headers'
 async function getDataProfile() {
   const cookieStore = cookies()
   const sessionToken = cookieStore.get('sessionToken')
-  console.log(sessionToken?.value)
 
   const { payload } = await accountApiRequest.getProfile(sessionToken?.value ?? '')
   return payload
