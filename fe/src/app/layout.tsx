@@ -30,7 +30,7 @@ export default function RootLayout({
           <AppProvider initialSessionToken={sessionToken?.value}>
             <Header />
             <div className='container'>
-              {children}
+                {children}
             </div>
             <Footer />
           </AppProvider>

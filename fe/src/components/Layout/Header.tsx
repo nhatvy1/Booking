@@ -7,8 +7,46 @@ import { LuUserCircle2 } from 'react-icons/lu'
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react'
 import Link from 'next/link'
 import { GrLanguage } from 'react-icons/gr'
+import { useAppContext } from '@/context/AppProvider'
+import { useEffect, useState } from 'react'
+
+const notLogged = [
+  {
+    key: 'register',
+    label: 'Đăng ký',
+  },
+  {
+    key: 'login',
+    label: <Link href='/login'>Đăng nhập</Link>,
+  },
+  {
+    key: 'thue',
+    label: 'Cho thuê chỗ ở qua Airbnb',
+  },
+  {
+    key: 'support',
+    label: 'Trung tâm trợ giúp',
+  },
+]
+
+const logged = [
+  {
+    key: 'thue',
+    label: 'Cho thuê chỗ ở qua Airbnb',
+  },
+  {
+    key: 'support',
+    label: 'Trung tâm trợ giúp',
+  },
+  {
+    key: 'logout',
+    label: 'Đăng xuất',
+  },
+]
 
 const Header = () => {
+  const { sessionToken } = useAppContext()
+
   return (
     <MainSection className='shadow-border sticky top-0 bg-white z-50'>
       <div className='container py-4 flex justify-between items-start'>
@@ -22,28 +60,42 @@ const Header = () => {
           />
         </Link>
         <div className='flex items-center gap-x-2'>
-          <div className='h-12 hover:bg-gray-100 flex items-center justify-center px-3 rounded-full duration-400 text-sm font-semibold'>Cho thuê chỗ ở qua Airbnb</div>
+          <Link href='/' className='h-12 hover:bg-gray-100 flex items-center justify-center px-3 rounded-full duration-400 text-sm font-semibold'>
+            Cho thuê chỗ ở qua Airbnb
+          </Link>
           <div className='h-12 w-12 flex items-center justify-center hover:bg-gray-100 rounded-full duration-400 cursor-pointer'>
             <GrLanguage />
           </div>
           <div>
-            <Dropdown>
-              <DropdownTrigger>
-                <Button className='border border-disabled bg-white rounded-full h-12'>
-                  <HiBars3BottomLeft size={24} />
-                  <LuUserCircle2 size={24} />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu aria-label='Action event example'>
-                <DropdownItem key='register'>Đăng ký</DropdownItem>
-                <DropdownItem key='login' as={Link} href='/login' showDivider>
-                  Đăng nhập
-                </DropdownItem>
-                <DropdownItem key='profile' as={Link} href='/profile'>Trang cá nhân</DropdownItem>
-                <DropdownItem key='thue'>Cho thuê chỗ ở qua Airbnb</DropdownItem>
-                <DropdownItem key='support'>Trung tâm trợ giúp</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+            {!sessionToken ? (
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button className='border border-disabled bg-white rounded-full h-12'>
+                    <HiBars3BottomLeft size={24} />
+                    <LuUserCircle2 size={24} />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu aria-label='Action event example' items={notLogged}>
+                  {(item) => {
+                    return <DropdownItem key={item.key}>{item.label}</DropdownItem>
+                  }}
+                </DropdownMenu>
+              </Dropdown>
+            ) : (
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button className='border border-disabled bg-white rounded-full h-12'>
+                    <HiBars3BottomLeft size={24} />
+                    <LuUserCircle2 size={24} />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu aria-label='Action event example' items={logged}>
+                  {(item) => {
+                    return <DropdownItem key={item.key}>{item.label}</DropdownItem>
+                  }}
+                </DropdownMenu>
+              </Dropdown>
+            )}
           </div>
         </div>
       </div>

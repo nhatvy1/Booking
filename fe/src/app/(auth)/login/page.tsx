@@ -1,6 +1,9 @@
 'use client'
 import { loginAction } from '@/actions/login'
+import authApiRequest from '@/apiRequest/auth'
+import { useAppContext } from '@/context/AppProvider'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { FaFacebookSquare } from 'react-icons/fa'
@@ -10,6 +13,8 @@ import { TfiEmail } from 'react-icons/tfi'
 import { toast } from 'react-toastify'
 
 const Login = () => {
+  const router  = useRouter()
+  const { setSessionToken } = useAppContext()
   const [loading, setLoading] = useState(false)
 
   const {
@@ -21,20 +26,16 @@ const Login = () => {
   const onSubmit: SubmitHandler<ILogin> = async (data: ILogin) => {
     try {
       setLoading(true)
-      const res = await loginAction(data)
-      console.log('Check res: ', res)
-      if(res.statusCode === 200) {
+      const { payload } = await loginAction(data)
+      if(payload.statusCode === 200) {
         toast.success('Đăng nhập thành công')
-        const resultNextServer =  await fetch('/api/auth', {
-          method: 'POST',
-          body: JSON.stringify(res.result.access_token),
-          headers: {
-            'Content-Type': 'application/json'
-          }
+        setSessionToken(payload.result.access_token)
+        await authApiRequest.auth({
+          sessionToken: payload.result.access_token,
         })
-        console.log('Next server: ', resultNextServer)
+        router.push('/profile')
       } else {
-        toast.error(res?.message || 'Đăng nhập thất bại')
+        toast.error(payload?.message || 'Đăng nhập thất bại')
       }
     } catch (e) {
       console.log(e)

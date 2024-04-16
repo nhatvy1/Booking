@@ -1,8 +1,8 @@
 'use server'
 
-import { postDataAuth } from "@/services/fetch/fetchApi"
+import http from "@/lib/http"
 
 export const loginAction = async(data: ILogin)=> {
-  const res = await postDataAuth('auth/login', data)
+  const res = await http.post<ILoginRes>('auth/login', data)
   return res
 }
