@@ -1,10 +1,15 @@
+import { normalizePath } from "./utils"
+
 type CustomOptions = Omit<RequestInit, 'method'> & {
   baseUrl?: string | undefined
 }
 
-class HttpError extends Error {
+export class HttpError extends Error {
   status: number
-  payload: any
+  payload: {
+    message: ''
+    [key: string]: any
+  }
 
   constructor({ status, payload }: { status: number; payload: any }) {
     super('Http Error')
@@ -62,13 +67,16 @@ const request = async <Response>(
   }
 
   // if(!res.ok) {
-  //   throw new HttpError(data)
+  //   throw new HttpError({ status: 401, payload: 'msg'})
   // }
 
-  if (['/auth/login'].includes(url)) {
-    clientSessionToken.value = (payload as ILoginRes).result.access_token
-  } else if('api/auth/logout' === url) {
-    clientSessionToken.value = ''
+  // Logic running client (browser)
+  if (typeof window !== 'undefined') {
+    if (['auth/login'].some(item => item === normalizePath(url))) {
+      clientSessionToken.value = (payload as ILoginRes).result.access_token
+    } else if('auth/logout' === normalizePath(url)) {
+      clientSessionToken.value = ''
+    }
   }
   return data
 }

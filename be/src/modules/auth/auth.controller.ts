@@ -26,6 +26,15 @@ export class AuthController {
     return Response({ statusCode: HttpStatus.OK, message: 'Success', result })
   }
 
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  logout(){
+    return Response({
+      statusCode: HttpStatus.OK,
+      message: 'Logout success'
+    })
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('demo')
   async demo(@GetCurrentUser() user: JwtPayload) {

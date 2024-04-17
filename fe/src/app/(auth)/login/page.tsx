@@ -1,6 +1,7 @@
 'use client'
 import { loginAction } from '@/actions/login'
 import authApiRequest from '@/apiRequest/auth'
+import { backend_url } from '@/lib/constant'
 import { clientSessionToken } from '@/lib/http'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -25,19 +26,18 @@ const Login = () => {
   const onSubmit: SubmitHandler<ILogin> = async (data: ILogin) => {
     try {
       setLoading(true)
-      const { payload } = await loginAction(data)
-      if(payload.statusCode === 200) {
+      const res = await loginAction(data)
+      if(res.payload.statusCode === 200) {
         toast.success('Đăng nhập thành công')
-        clientSessionToken.value = payload.result.access_token
+        clientSessionToken.value = res.payload.result.access_token
         await authApiRequest.auth({
-          sessionToken: payload.result.access_token,
+          sessionToken: res.payload.result.access_token,
         })
         router.push('/profile')
       } else {
-        toast.error(payload?.message || 'Đăng nhập thất bại')
+        toast.error(res.payload?.message || 'Đăng nhập thất bại')
       }
     } catch (e) {
-      console.log(e)
       toast.error('That bai')
     } finally {
       setLoading(false)
