@@ -6,6 +6,7 @@ import { UserModule } from './modules/user/user.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { RoleModule } from './modules/role/role.module'
 import { PermissionModule } from './modules/permission/permission.module'
+import { RoomTypeModule } from './modules/roomType/room.type.module'
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { PermissionModule } from './modules/permission/permission.module'
     UserModule,
     AuthModule,
     RoleModule,
-    PermissionModule
+    PermissionModule,
+    RoomTypeModule
   ],
   controllers: [],
   providers: [{ provide: 'PORT', useValue: 5000 }],

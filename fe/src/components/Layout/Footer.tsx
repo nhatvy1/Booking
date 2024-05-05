@@ -37,7 +37,7 @@ const Footer = () => {
     },
   ]
   return (
-    <MainSection className='border py-12 bg-faint shadow-custom-1'>
+    <MainSection className='border py-12 bg-faint'>
       <div className='max-w-[1200px] mx-auto'>
         <div className='flex'>
           {list.map((item, index) => (
@@ -56,7 +56,6 @@ const Footer = () => {
           ))}
         </div>
       </div>
-      <div></div>
     </MainSection>
   )
 }
